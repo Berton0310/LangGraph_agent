@@ -161,11 +161,11 @@ class Configuration(BaseModel):
     )
     # Model Configuration
     summarization_model: str = Field(
-        default="openai:gpt-4o-mini",
+        default="gemini-2.5-pro",  # 原始: "openai:gpt-4o-mini"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4o-mini",
+                "default": "gemini-2.5-pro",  # 原始: "openai:gpt-4o-mini"
                 "description": "Model for summarizing research results from Tavily search results"
             }
         }
@@ -193,11 +193,11 @@ class Configuration(BaseModel):
         }
     )
     research_model: str = Field(
-        default="openai:gpt-4o",
+        default="gemini-2.5-pro",  # 原始: "openai:gpt-4o"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4o",
+                "default": "gemini-2.5-pro",  # 原始: "openai:gpt-4o"
                 "description": "Model for conducting research. NOTE: Make sure your Researcher Model supports the selected search API."
             }
         }
@@ -213,11 +213,11 @@ class Configuration(BaseModel):
         }
     )
     compression_model: str = Field(
-        default="openai:gpt-4o",
+        default="gemini-2.5-pro",  # 原始: "openai:gpt-4o"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4o",
+                "default": "gemini-2.5-pro",  # 原始: "openai:gpt-4o"
                 "description": "Model for compressing research findings from sub-agents. NOTE: Make sure your Compression Model supports the selected search API."
             }
         }
@@ -233,11 +233,11 @@ class Configuration(BaseModel):
         }
     )
     final_report_model: str = Field(
-        default="openai:gpt-4o",
+        default="gemini-2.5-pro",  # 原始: "openai:gpt-4o"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4o",
+                "default": "gemini-2.5-pro",  # 原始: "openai:gpt-4o"
                 "description": "Model for writing the final report from all research findings"
             }
         }
@@ -254,11 +254,11 @@ class Configuration(BaseModel):
     )
     # Plan Agent 特定配置
     plan_model: str = Field(
-        default="gemini:gemini-2.5-pro",
+        default="gemini-2.5-pro",  # 原始: "gemini:gemini-2.5-pro"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "gemini:gemini-2.5-pro",
+                "default": "gemini-2.5-pro",  # 原始: "gemini:gemini-2.5-pro"
                 "description": "Model for planning report structure and sections"
             }
         }
@@ -404,25 +404,25 @@ class ConfigurationManager:
             ),
             AgentType.RESEARCH: AgentConfiguration(
                 agent_type=AgentType.RESEARCH,
-                model_name="gpt-4o-mini",
+                model_name="gemini-2.5-pro",  # 原始: "gpt-4o-mini"
                 temperature=0.1,
                 custom_prompt="你是一個專業的研究分析師"
             ),
             AgentType.WRITER: AgentConfiguration(
                 agent_type=AgentType.WRITER,
-                model_name="gpt-4o",
+                model_name="gemini-2.5-pro",  # 原始: "gpt-4o"
                 temperature=0.3,
                 custom_prompt="你是一個專業的報告撰寫專家"
             ),
             AgentType.REVIEWER: AgentConfiguration(
                 agent_type=AgentType.REVIEWER,
-                model_name="claude-3-sonnet-20240229",
+                model_name="gemini-2.5-pro",  # 原始: "claude-3-sonnet-20240229"
                 temperature=0.1,
                 custom_prompt="你是一個專業的報告審查專家"
             ),
             AgentType.ANALYZER: AgentConfiguration(
                 agent_type=AgentType.ANALYZER,
-                model_name="claude-3-opus-20240229",
+                model_name="gemini-2.5-pro",  # 原始: "claude-3-opus-20240229"
                 temperature=0.2,
                 custom_prompt="你是一個專業的數據分析專家"
             ),
@@ -519,7 +519,15 @@ def get_api_key_for_model(model_name: str, config: Optional[RunnableConfig] = No
     if ":" in model_name:
         provider, model = model_name.split(":", 1)
     else:
-        provider = model_name.split("-")[0]  # 假設模型名稱格式為 provider-model
+        # 根據模型名稱判斷提供者
+        if model_name.startswith("gemini"):
+            provider = "gemini"
+        elif model_name.startswith("gpt"):
+            provider = "openai"
+        elif model_name.startswith("claude"):
+            provider = "anthropic"
+        else:
+            provider = model_name.split("-")[0]  # 預設行為
 
     # 根據提供者獲取 API 金鑰
     if provider.lower() == "gemini":

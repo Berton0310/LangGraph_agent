@@ -1,0 +1,473 @@
+started_at: 2025-10-13T18:15:32
+ended_at: 2025-10-13T18:20:08
+elapsed_seconds: 276.85
+
+===== result (pretty) =====
+{'final_report': '# 總結報告：2023 年初以來人工智慧在醫療診斷領域的進展\n'
+                 '\n'
+                 '本報告全面概述了自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。報告整合了權威學術期刊和會議的最新研究，深入探討了具體的 AI '
+                 '技術、在各醫療專科的應用、執行的診斷任務，以及這些創新所帶來的影響與挑戰。\n'
+                 '\n'
+                 '## 核心 AI 技術突破\n'
+                 '\n'
+                 '自 2023 年以來，多項 AI 技術在醫療診斷領域取得了顯著的突破，特別是在深度學習、電腦視覺和自然語言處理方面，這些技術正從演算法開發階段邁向臨床整合 [3]。\n'
+                 '\n'
+                 '### 深度學習與電腦視覺\n'
+                 '\n'
+                 '深度學習，特別是卷積神經網路 (CNN) 和新興的視覺轉換器 (ViT) 模型，持續在醫學影像分析中展現強大的能力。\n'
+                 '\n'
+                 '*   **視覺轉換器 (ViT) 的優越性**：一項 2024 年的研究比較了八種深度學習模型用於乳癌組織病理學影像的分類，結果顯示視覺轉換器 (ViT) 模型以 94% '
+                 '的驗證準確率超越了所有傳統的 CNN 模型（如 ResNet、DenseNet）。研究指出，ViT 的自注意力機制能更有效地捕捉影像的全局和局部特徵，使其成為此類分類任務的頂尖架構 [4]。\n'
+                 '*   **多模態影像應用**：AI 模型在多種影像診斷任務中得到應用，包括乳癌分類、膝關節骨性關節炎檢測、猴痘檢測，以及心臟磁振造影 (MR) 的影像重建等 [1]。\n'
+                 '\n'
+                 '### 自然語言處理 (NLP) 與大型語言模型 (LLM)\n'
+                 '\n'
+                 'NLP 技術的進步，使其能夠從非結構化的電子健康記錄 (EHR) 中提取有價值的臨床資訊，並預測疾病風險。\n'
+                 '\n'
+                 '*   **從電子病歷預測疾病風險**：一項發表於 2024 年初的研究展示了一種創新的方法，該方法使用 Word2Vec 演算法和雙向門控循環單元 (GRU) 模型，分析來自約 5000 '
+                 '萬名患者的電子健康記錄。該模型成功預測了患者在未來三年內罹患多種慢性病的風險，其接收者操作特徵曲線下面積 (AUC) 值分別為：第 2 型糖尿病 0.92、慢性阻塞性肺病 (COPD) '
+                 '0.94、高血壓 0.92，以及心肌梗塞 0.94。此研究也利用 SHAP (SHapley Additive exPlanations) 值來解釋模型決策，增加了其在臨床上的可信度 [5]。\n'
+                 '*   **大型語言模型的潛力**：像 Gemini 和 GPT 這樣的大型語言模型 (LLM) 被認為具有徹底改變醫療診斷的巨大潛力。它們不僅能提供更詳細的疾病解釋，還能利用生成式 AI '
+                 '創建合成醫學數據，以解決訓練數據不足的問題 [1]。\n'
+                 '\n'
+                 '## 跨專科的具體應用實例\n'
+                 '\n'
+                 'AI 的應用已滲透到多個醫療專科，顯著提升了診斷的效率和準確性。\n'
+                 '\n'
+                 '### 心臟病學\n'
+                 '\n'
+                 'AI 技術，特別是基於 AI 的血流儲備分數 (AI-FFR)，已成為診斷冠狀動脈疾病 (CAD) 的關鍵工具。\n'
+                 '\n'
+                 '*   **AI-FFR 技術**：該技術結合冠狀動脈電腦斷層血管攝影 (CCTA)，透過深度學習分析影像，以非侵入性的方式評估冠狀動脈狹窄的功能性意義。研究顯示，AI-FFR 的整體診斷準確率可達 '
+                 '94%，敏感性和特異性分別為 91% 和 95% [2]。一項名為 CREDENCE 的臨床試驗更指出，AI-FFR 技術可將不必要的侵入性血管攝影檢查減少高達 49% [2]。\n'
+                 '\n'
+                 '### 腫瘤學與病理學\n'
+                 '\n'
+                 '在腫瘤學領域，AI 正在整合影像學、基因組學和醫療記錄等多種數據，以實現更精準的診斷。\n'
+                 '\n'
+                 '*   **乳癌組織病理學影像分析**：如前所述，深度學習模型（特別是視覺轉換器 ViT）能夠以高達 94% '
+                 '的準確率自動分類乳癌組織病理學影像，這有助於病理學家更快、更準確地做出診斷，從而加速早期乳癌篩檢的流程 [4]。\n'
+                 '\n'
+                 '### 放射學\n'
+                 '\n'
+                 'AI 模型被用於輔助放射科醫生判讀各種醫學影像。一項研究評估了 AI 模型 (KARA-CXR) 和大型語言模型 (ChatGPT) 在判讀胸部 X 光片方面的準確性，顯示了 AI 在此領域的應用潛力 '
+                 '[1]。\n'
+                 '\n'
+                 '### 其他診斷任務\n'
+                 '\n'
+                 '*   **疾病風險預測**：利用自然語言處理分析電子健康記錄，AI 能夠在疾病症狀出現前提早識別高風險人群，為預防性干預提供寶貴的時間窗口 [5]。\n'
+                 '*   **早期疾病篩檢**：除了影像分析，AI 還被應用於其他篩檢場景，例如透過分析聲音特徵來檢測帕金森氏症，以及區分流感陽性與陰性患者 [1]。\n'
+                 '\n'
+                 '## 影響、挑戰與未來展望\n'
+                 '\n'
+                 '儘管 AI 在醫療診斷領域展現出巨大潛力，但其廣泛的臨床應用仍面臨多重挑戰。\n'
+                 '\n'
+                 '### 主要影響與優勢\n'
+                 '\n'
+                 '*   **提高準確率與效率**：AI 工具在分析醫學影像（如 X 光、MRI、CT 掃描）時，能識別出人類專家可能忽略的微小異常，從而顯著減少人為錯誤並提高診斷準確率 [7, 6]。\n'
+                 '*   **加速診斷流程**：AI 能夠快速處理大量數據，縮短診斷所需時間，進而可能降低醫療成本並加快患者獲得治療的速度 [7]。\n'
+                 '*   **實現個人化醫療**：透過分析患者特定的數據，AI 能夠制定個人化的診斷方法，推動醫療保健朝向更精準、更客製化的方向發展 [7]。\n'
+                 '\n'
+                 '### 挑戰與限制\n'
+                 '\n'
+                 '*   **數據隱私與安全**：醫療數據的極度敏感性使數據安全成為首要挑戰。AI 系統的實施必須嚴格遵守數據保護法規（如 HIPAA），並採用強大的加密和存取控制措施 [8, 6]。\n'
+                 '*   **數據品質與偏見**：AI 模型的性能高度依賴於大量、高品質、多樣化的訓練數據。數據集的不平衡或偏差可能導致模型產生歧視性或錯誤的結果，加劇醫療不平等 [8, 1]。\n'
+                 '*   **整合與互通性**：將新的 AI 系統與醫院現有的 IT 基礎設施（如電子健康記錄系統）無縫整合是一項重大的技術挑戰。這需要標準化的數據格式和平台間的協作 [8]。\n'
+                 '*   **法規與倫理障礙**：AI 診斷工具的審批流程複雜，且在發生誤診時的責任歸屬問題尚不清晰。此外，確保 AI 決策過程的透明度和可解釋性也是一個關鍵的倫理要求 [8]。\n'
+                 '*   **成本與採用阻力**：實施 AI 技術的初始投資成本高昂。同時，部分醫療專業人員可能因擔心工作被取代或工作流程被打亂而抵制新技術的採用 [8, 6]。\n'
+                 '\n'
+                 '### 未來展望\n'
+                 '\n'
+                 '為了充分發揮 AI 的潛力，未來的發展重點應包括：\n'
+                 '\n'
+                 '*   **持續的研究與合作**：需要跨學科的合作，持續進行研究以驗證 AI 模型的有效性和安全性 [6]。\n'
+                 '*   **倫理準則的建立**：制定明確的倫理準則，以指導 AI 技術的負責任開發和應用 [7]。\n'
+                 '*   **生成式 AI 的探索**：利用生成式 AI 創建高質量的合成醫療數據，以彌補真實世界數據的不足，並用於訓練和驗證 AI 模型 [1]。\n'
+                 '\n'
+                 '總而言之，自 2023 年以來，AI 在醫療診斷領域的進步是顯著且迅速的。儘管前方仍有諸多挑戰，但透過技術創新、法規完善和跨界合作，AI 有望為全球醫療保健系統帶來革命性的變革。\n'
+                 '\n'
+                 '### 來源\n'
+                 '\n'
+                 '[1] Advancements in Artificial Intelligence for Medical ... : '
+                 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11202700/\n'
+                 '[2] Efficacy of artificial intelligence-based FFR technology for coronary ... : '
+                 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12350311/\n'
+                 '[3] Artificial Intelligence in Oncology: Current Landscape, Challenges ... : '
+                 'https://aacrjournals.org/cancerdiscovery/article/14/5/711/745040/Artificial-Intelligence-in-Oncology-Current\n'
+                 '[4] Evaluating Deep Learning Models for Breast Cancer Classification : '
+                 'https://arxiv.org/html/2408.16859v2\n'
+                 '[5] Predicting disease onset from electronic health records for ... : '
+                 'https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1287541/full\n'
+                 '[6] The Impact of Artificial Intelligence on Healthcare: A Comprehensive ...: '
+                 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11702416/\n'
+                 '[7] AI in diagnostic imaging: Revolutionising accuracy and efficiency: '
+                 'https://www.sciencedirect.com/science/article/pii/S2666990024000132\n'
+                 '[8] Challenges of AI Integration in Healthcare - Ominext: '
+                 'https://www.ominext.com/en/blog/challenges-of-ai-integration-in-healthcare',
+ 'messages': [HumanMessage(content='請簡要研究人工智慧在醫療診斷方面的最新應用', additional_kwargs={}, response_metadata={}, id='bb8c656d-7531-4778-a2f8-c7bcde560a4a'),
+              AIMessage(content='# 總結報告：2023 年初以來人工智慧在醫療診斷領域的進展\n\n本報告全面概述了自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。報告整合了權威學術期刊和會議的最新研究，深入探討了具體的 AI 技術、在各醫療專科的應用、執行的診斷任務，以及這些創新所帶來的影響與挑戰。\n\n## 核心 AI 技術突破\n\n自 2023 年以來，多項 AI 技術在醫療診斷領域取得了顯著的突破，特別是在深度學習、電腦視覺和自然語言處理方面，這些技術正從演算法開發階段邁向臨床整合 [3]。\n\n### 深度學習與電腦視覺\n\n深度學習，特別是卷積神經網路 (CNN) 和新興的視覺轉換器 (ViT) 模型，持續在醫學影像分析中展現強大的能力。\n\n*   **視覺轉換器 (ViT) 的優越性**：一項 2024 年的研究比較了八種深度學習模型用於乳癌組織病理學影像的分類，結果顯示視覺轉換器 (ViT) 模型以 94% 的驗證準確率超越了所有傳統的 CNN 模型（如 ResNet、DenseNet）。研究指出，ViT 的自注意力機制能更有效地捕捉影像的全局和局部特徵，使其成為此類分類任務的頂尖架構 [4]。\n*   **多模態影像應用**：AI 模型在多種影像診斷任務中得到應用，包括乳癌分類、膝關節骨性關節炎檢測、猴痘檢測，以及心臟磁振造影 (MR) 的影像重建等 [1]。\n\n### 自然語言處理 (NLP) 與大型語言模型 (LLM)\n\nNLP 技術的進步，使其能夠從非結構化的電子健康記錄 (EHR) 中提取有價值的臨床資訊，並預測疾病風險。\n\n*   **從電子病歷預測疾病風險**：一項發表於 2024 年初的研究展示了一種創新的方法，該方法使用 Word2Vec 演算法和雙向門控循環單元 (GRU) 模型，分析來自約 5000 萬名患者的電子健康記錄。該模型成功預測了患者在未來三年內罹患多種慢性病的風險，其接收者操作特徵曲線下面積 (AUC) 值分別為：第 2 型糖尿病 0.92、慢性阻塞性肺病 (COPD) 0.94、高血壓 0.92，以及心肌梗塞 0.94。此研究也利用 SHAP (SHapley Additive exPlanations) 值來解釋模型決策，增加了其在臨床上的可信度 [5]。\n*   **大型語言模型的潛力**：像 Gemini 和 GPT 這樣的大型語言模型 (LLM) 被認為具有徹底改變醫療診斷的巨大潛力。它們不僅能提供更詳細的疾病解釋，還能利用生成式 AI 創建合成醫學數據，以解決訓練數據不足的問題 [1]。\n\n## 跨專科的具體應用實例\n\nAI 的應用已滲透到多個醫療專科，顯著提升了診斷的效率和準確性。\n\n### 心臟病學\n\nAI 技術，特別是基於 AI 的血流儲備分數 (AI-FFR)，已成為診斷冠狀動脈疾病 (CAD) 的關鍵工具。\n\n*   **AI-FFR 技術**：該技術結合冠狀動脈電腦斷層血管攝影 (CCTA)，透過深度學習分析影像，以非侵入性的方式評估冠狀動脈狹窄的功能性意義。研究顯示，AI-FFR 的整體診斷準確率可達 94%，敏感性和特異性分別為 91% 和 95% [2]。一項名為 CREDENCE 的臨床試驗更指出，AI-FFR 技術可將不必要的侵入性血管攝影檢查減少高達 49% [2]。\n\n### 腫瘤學與病理學\n\n在腫瘤學領域，AI 正在整合影像學、基因組學和醫療記錄等多種數據，以實現更精準的診斷。\n\n*   **乳癌組織病理學影像分析**：如前所述，深度學習模型（特別是視覺轉換器 ViT）能夠以高達 94% 的準確率自動分類乳癌組織病理學影像，這有助於病理學家更快、更準確地做出診斷，從而加速早期乳癌篩檢的流程 [4]。\n\n### 放射學\n\nAI 模型被用於輔助放射科醫生判讀各種醫學影像。一項研究評估了 AI 模型 (KARA-CXR) 和大型語言模型 (ChatGPT) 在判讀胸部 X 光片方面的準確性，顯示了 AI 在此領域的應用潛力 [1]。\n\n### 其他診斷任務\n\n*   **疾病風險預測**：利用自然語言處理分析電子健康記錄，AI 能夠在疾病症狀出現前提早識別高風險人群，為預防性干預提供寶貴的時間窗口 [5]。\n*   **早期疾病篩檢**：除了影像分析，AI 還被應用於其他篩檢場景，例如透過分析聲音特徵來檢測帕金森氏症，以及區分流感陽性與陰性患者 [1]。\n\n## 影響、挑戰與未來展望\n\n儘管 AI 在醫療診斷領域展現出巨大潛力，但其廣泛的臨床應用仍面臨多重挑戰。\n\n### 主要影響與優勢\n\n*   **提高準確率與效率**：AI 工具在分析醫學影像（如 X 光、MRI、CT 掃描）時，能識別出人類專家可能忽略的微小異常，從而顯著減少人為錯誤並提高診斷準確率 [7, 6]。\n*   **加速診斷流程**：AI 能夠快速處理大量數據，縮短診斷所需時間，進而可能降低醫療成本並加快患者獲得治療的速度 [7]。\n*   **實現個人化醫療**：透過分析患者特定的數據，AI 能夠制定個人化的診斷方法，推動醫療保健朝向更精準、更客製化的方向發展 [7]。\n\n### 挑戰與限制\n\n*   **數據隱私與安全**：醫療數據的極度敏感性使數據安全成為首要挑戰。AI 系統的實施必須嚴格遵守數據保護法規（如 HIPAA），並採用強大的加密和存取控制措施 [8, 6]。\n*   **數據品質與偏見**：AI 模型的性能高度依賴於大量、高品質、多樣化的訓練數據。數據集的不平衡或偏差可能導致模型產生歧視性或錯誤的結果，加劇醫療不平等 [8, 1]。\n*   **整合與互通性**：將新的 AI 系統與醫院現有的 IT 基礎設施（如電子健康記錄系統）無縫整合是一項重大的技術挑戰。這需要標準化的數據格式和平台間的協作 [8]。\n*   **法規與倫理障礙**：AI 診斷工具的審批流程複雜，且在發生誤診時的責任歸屬問題尚不清晰。此外，確保 AI 決策過程的透明度和可解釋性也是一個關鍵的倫理要求 [8]。\n*   **成本與採用阻力**：實施 AI 技術的初始投資成本高昂。同時，部分醫療專業人員可能因擔心工作被取代或工作流程被打亂而抵制新技術的採用 [8, 6]。\n\n### 未來展望\n\n為了充分發揮 AI 的潛力，未來的發展重點應包括：\n\n*   **持續的研究與合作**：需要跨學科的合作，持續進行研究以驗證 AI 模型的有效性和安全性 [6]。\n*   **倫理準則的建立**：制定明確的倫理準則，以指導 AI 技術的負責任開發和應用 [7]。\n*   **生成式 AI 的探索**：利用生成式 AI 創建高質量的合成醫療數據，以彌補真實世界數據的不足，並用於訓練和驗證 AI 模型 [1]。\n\n總而言之，自 2023 年以來，AI 在醫療診斷領域的進步是顯著且迅速的。儘管前方仍有諸多挑戰，但透過技術創新、法規完善和跨界合作，AI 有望為全球醫療保健系統帶來革命性的變革。\n\n### 來源\n\n[1] Advancements in Artificial Intelligence for Medical ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC11202700/\n[2] Efficacy of artificial intelligence-based FFR technology for coronary ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC12350311/\n[3] Artificial Intelligence in Oncology: Current Landscape, Challenges ... : https://aacrjournals.org/cancerdiscovery/article/14/5/711/745040/Artificial-Intelligence-in-Oncology-Current\n[4] Evaluating Deep Learning Models for Breast Cancer Classification : https://arxiv.org/html/2408.16859v2\n[5] Predicting disease onset from electronic health records for ... : https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1287541/full\n[6] The Impact of Artificial Intelligence on Healthcare: A Comprehensive ...: https://pmc.ncbi.nlm.nih.gov/articles/PMC11702416/\n[7] AI in diagnostic imaging: Revolutionising accuracy and efficiency: https://www.sciencedirect.com/science/article/pii/S2666990024000132\n[8] Challenges of AI Integration in Healthcare - Ominext: https://www.ominext.com/en/blog/challenges-of-ai-integration-in-healthcare', additional_kwargs={}, response_metadata={'is_blocked': False, 'safety_ratings': [], 'usage_metadata': {'prompt_token_count': 5526, 'candidates_token_count': 2290, 'total_token_count': 9505, 'prompt_tokens_details': [{'modality': 1, 'token_count': 5526}], 'candidates_tokens_details': [{'modality': 1, 'token_count': 2290}], 'thoughts_token_count': 1689, 'cached_content_token_count': 0, 'cache_tokens_details': []}, 'finish_reason': 'STOP', 'avg_logprobs': -0.2269940105588155, 'model_name': 'gemini-2.5-pro'}, id='run--46338587-e860-4e0c-84ef-781b0a15a78f-0', usage_metadata={'input_tokens': 5526, 'output_tokens': 2290, 'total_tokens': 9505, 'input_token_details': {'cache_read': 0}, 'output_token_details': {'reasoning': 1689}})],
+ 'notes': [],
+ 'raw_notes': ['\n'
+               'Search results: \n'
+               '\n'
+               '\n'
+               '\n'
+               '--- SOURCE 1: Advancements in Artificial Intelligence for Medical ... ---\n'
+               'URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC11202700/\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '這篇文章是發表於《診斷學》期刊的一篇社論，介紹了名為「人工智慧在醫學電腦輔助診斷中的進展」的特刊。該特刊收錄了2023年3月至2023年12月期間收集的12篇研究文章，旨在展示將人工智慧（AI）和機器學習（ML）技術整合到放射學、病理學、基因組學和個人化醫療等各種診斷模式中的尖端研究。\n'
+               '\n'
+               '社論總結了這12篇文章，內容涵蓋多個主題，包括：\n'
+               '- 使用AI自動分類冠狀動脈狹窄和檢測心血管疾病。\n'
+               '- 評估AI模型（KARA-CXR和ChatGPT）在判讀胸部X光片的準確性。\n'
+               '- 應用機器學習區分流感陽性和陰性患者。\n'
+               '- 透過聲音屬性檢測帕金森氏症。\n'
+               '- 用於乳癌分類、膝關節骨性關節炎檢測和猴痘檢測的深度學習模型。\n'
+               '- 用於心臟MR影像重建的深度學習框架。\n'
+               '\n'
+               '該文還承認了這些研究的一些局限性，例如研究結果的普適性有限、數據集不平衡等方法學上的限制，以及在真實臨床環境中可能高估了模型的性能。展望未來，社論強調了大型語言模型（LLM）（如Gemini和ChatGPT）在提供更詳細的解釋、利用生成式AI創建合成醫學數據以克服數據集限制，以及探索對比學習等技術方面的潛力。總之，該特刊強調了AI和ML在徹底改變醫學診斷方面的巨大潛力，同時也指出了需要進一步研究和開發的領域。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '快速發展的人工智慧（AI）和機器學習（ML）正在改變診斷領域，在疾病檢測、分類和治療計劃方面實現了前所未有的準確性和效率。本特刊名為「人工智慧在醫學電腦輔助診斷方面的進展」，介紹了一系列精心挑選的尖端研究，探討了將AI和ML技術整合到各種診斷模式中。我們在本特刊中共發表了12篇研究文章，均在2023年3月至2023年12月期間收集，包括1篇社論封面信、9篇常規研究文章、1篇綜述文章和1篇歸類為「其他」的文章。儘管本特刊中發表的文章為利用AI和機器學習（ML）技術的醫學診斷領域做出了寶貴的貢獻，但這些文章也存在一些局限性。總之，像Gemini和GPT（生成式預訓練轉換器）這樣基於LLM的工具在徹底改變醫療診斷方面具有巨大的潛力。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               'Reflection recorded: The initial search provided a highly relevant editorial summarizing a 2023 '
+               'special issue on AI in medical diagnosis. This gives me a fantastic overview and specific examples in '
+               'radiology, cardiology, and pathology. I have a good starting point but need more detailed information '
+               'on the specific AI models used, their performance, and more information on oncology and NLP from EHRs. '
+               'My next step is to search for the original research papers mentioned in the editorial and also conduct '
+               'searches for the less-covered areas.\n'
+               '\n'
+               'Search results: \n'
+               '\n'
+               '\n'
+               '\n'
+               '--- SOURCE 1: Efficacy of artificial intelligence-based FFR technology for coronary ... ---\n'
+               'URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC12350311/\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '這篇系統性綜述探討了基於人工智慧的血流儲備分數（AI-FFR）技術在結合冠狀動脈電腦斷層血管攝影（CCTA）以偵測冠狀動脈狹窄及管理冠狀動脈疾病（CAD）方面的效能。該技術透過深度學習演算法（如 '
+               'AI-QCT）自動分析 CCTA 影像，以非侵入性方式評估冠狀動脈狹窄的功能顯著性，解決了傳統侵入性 FFR 的風險與成本，以及單純 CCTA 判讀的主觀性問題。\n'
+               '\n'
+               '臨床驗證研究顯示 AI-FFR 具有高度的診斷準確性。一項涵蓋 463 名患者、600 條血管的研究指出，全自動 CT-FFR 技術的診斷準確度達到 82%，並將操作步驟從約 60 '
+               '次點擊減少到僅需一次點擊。其他研究也證實了其高敏感性（91%）和特異性（95%），且在與心肌灌注顯像（MPI）等其他診斷工具的比較中表現更優，一項研究指出 AI-QCT 可將侵入性血管攝影的使用率降低達 '
+               '49%。\n'
+               '\n'
+               'AI-FFR '
+               '的臨床價值在於優化診斷流程、減少不必要的侵入性檢查、提高早期診斷的準確性與風險分層，並為個人化治療決策提供指引。它能更有效地預測主要不良心血管事件（MACE），協助臨床醫生更精準地為患者制定治療計畫。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '冠狀動脈電腦斷層血管攝影（CCTA）與人工智慧（AI）技術，特別是基於AI的血流儲備分數（FFR）評估相結合，已成為診斷和治療冠狀動脈疾病（CAD）的關鍵工具。AI-FFR '
+               '在診斷準確性和臨床實用性方面具有顯著優勢，可能提高CAD管理的效率。然而，在演算法穩健性、數據異質性和臨床實施方面仍然存在挑戰。\n'
+               '一項最新的研究引入了一種新穎的全自動現場CT-FFR技術，該技術在臨床實施上取得了顯著進展。該技術評估了463名患者的600條血管，準確率達到了令人印象深刻的0.82。值得注意的是，計算過程被簡化，將操作步驟從大約60步減少到僅一步，使其在臨床使用上更加實用。\n'
+               '最近的研究表明，AI-FFR技術在診斷性能上得到了顯著驗證。例如，一項研究表明，AI-FFR在檢測冠狀動脈狹窄方面的敏感性和特異性分別達到了91%和95%，總體準確率為94%。\n'
+               '根據CREDENCE試驗對301名患者的研究，AI-QCT顯示出比MPI顯著更高的診斷性能，其預測≥50%狹窄（0.88 vs. 0.66）、≥70%狹窄（0.92 vs. 0.81）和FFR '
+               '<0.80（0.90 vs. 0.71）的曲線下面積（AUC）值更高。在診斷演算法中實施AI-QCT可以將侵入性血管攝影的使用率減少高達49%。\n'
+               'AI-FFR技術在冠狀動脈疾病（CAD）管理中展現了重要的應用價值。通過從冠狀動脈電腦斷層血管攝影（CCTA）數據中提取血液動力學資訊，AI-FFR可以非侵入性地評估冠狀動脈狹窄的功能意義，從而幫助醫生做出更精確的臨床決策。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               '--- SOURCE 2: Evaluating Deep Learning Models for Breast Cancer Classification ---\n'
+               'URL: https://arxiv.org/html/2408.16859v2\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '一項比較研究評估了八種用於乳癌組織病理學影像分類的深度學習模型，包括 ResNet-50、DenseNet-121、ResNeXt-50、GoogLeNet (Inception '
+               'v3)、EfficientNet、MobileNet、SqueezeNet 和視覺轉換器 (ViT)。該研究使用了一個包含 277,524 個影像補丁的資料集，這些補丁取自乳房活檢，分為侵襲性導管癌 '
+               '(IDC) 和非侵襲性導管癌。研究結果顯示，視覺轉換器 (ViT) 模型的表現優於所有傳統的卷積神經網路 (CNN) 模型，達到了最高的 94% 驗證準確率。在 CNN 模型中，EfficientNet '
+               '的表現最佳，準確率為 93%。該研究的結論是，ViT '
+               '模型的自註意力機制在捕捉影像的全局和局部特徵方面具有優勢，使其成為此分類任務最有效的架構。這項研究強調了先進深度學習模型在提高乳癌診斷準確率和效率方面的潛力。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '這項研究評估了深度學習模型在分類組織病理學影像以進行早期和準確乳癌檢測方面的有效性。視覺轉換器 (ViT) 模型憑藉其基於註意力的機制，達到了 94% 的最高驗證準確率，優於傳統的 CNN。ViT '
+               '模型是分類乳癌組織病理學影像中侵襲性導管癌 (IDC) 最成功的架構。它達到了最高的準確率，並在精確率、召回率和 F1 分數之間保持了良好的平衡。實驗結果顯示，ViT 模型在總體準確率、精確率、召回率和 '
+               'F1 分數方面均優于傳統的 CNN 架構。這項工作強調了使用先進深度學習架構來提高臨床環境中診斷準確率的重要性，從而改善患者的結果。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               '--- SOURCE 3: Artificial Intelligence in Oncology: Current Landscape, Challenges ... ---\n'
+               'URL: '
+               'https://aacrjournals.org/cancerdiscovery/article/14/5/711/745040/Artificial-Intelligence-in-Oncology-Current\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '這篇發表於 2024 年 5 月 1 日《癌症發現》期刊的文章，回顧了人工智能 (AI) 在腫瘤學領域的現況、挑戰與未來方向。文章指出，AI '
+               '在腫瘤學的應用正從演算法開發階段邁向臨床整合。該回顧的重點在於臨床整合，並根據四種最常見的癌症類型以及偵測、診斷和治療等臨床領域來組織 AI '
+               '應用。這些應用涵蓋了影像、基因組學和醫療記錄等多種數據模式。文章最後總結了該領域現有的挑戰、不斷發展的解決方案以及潛在的未來方向。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '腫瘤學中的人工智能 (AI) 正在從演算法開發發展到臨床實踐的整合。AI '
+               '越來越多地被應用於腫瘤學的各個方面，其中一些應用正在從研發走向直接的臨床整合。本綜述通過臨床轉化沿著臨床護理連續體的視角，總結了該領域的現狀。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               'Reflection recorded: The previous searches provided excellent, specific examples for AI in cardiology '
+               '(AI-FFR) and pathology (breast cancer classification with Vision Transformers), along with a good '
+               'overview of AI in oncology. I have metrics, model names, and source types the user requested. The main '
+               'remaining gap is a detailed example of using Natural Language Processing (NLP) on Electronic Health '
+               'Records (EHRs) for disease risk prediction. My next search will be highly targeted to fill this '
+               'specific gap. After that, I should have sufficient information to provide a comprehensive answer.\n'
+               '\n'
+               'Search results: \n'
+               '\n'
+               '\n'
+               '\n'
+               '--- SOURCE 1: Predicting disease onset from electronic health records for ... ---\n'
+               'URL: '
+               'https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1287541/full\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '這篇於 2024 年 1 月 8 日發表的研究論文，探討了一種可擴展且可解釋的深度學習 (DL) 方法，用於從電子健康記錄 (EHR) 中預測疾病發作，以進行人口健康管理 (PHM)。\n'
+               '\n'
+               '**方法：**\n'
+               '該研究使用來自美國約 5000 萬名患者的縱向醫療數據。研究人員使用 Word2Vec 演算法從 EHR 中常用的結構化詞彙（例如 SNOMED '
+               'CT、NDC、LOINC）創建嵌入。他們引入了一種新穎的方法，將分箱的觀察值和更廣泛的健康決定因素（如年齡、種族、性別、保險類型）納入模型。然後將包含這些嵌入的患者記錄饋送到雙向門控循環單元 (GRU) '
+               '模型，以預測患者在未來 3 年內罹患 2 型糖尿病、慢性阻塞性肺病 (COPD)、高血壓或心肌梗塞 (MI) 的可能性。使用 SHapley Additive exPlanations (SHAP) '
+               '值來實現模型的可解釋性。\n'
+               '\n'
+               '**結果：**\n'
+               '增加數據範圍以包括分箱的觀察結果和更廣泛的健康決定因素可提高預測性能。該模型在預測糖尿病方面的接收者操作特徵曲線下面積 (AUC) 值為 0.92，COPD 為 0.94，高血壓為 0.92，心肌梗塞為 '
+               '0.94。SHAP 值表明，模型已經學習了與這些結果相關的已知臨床相關特徵。\n'
+               '\n'
+               '**結論：**\n'
+               '該研究中概述的 DL 方法可以從大規模 EHR 數據中識別臨床相關特徵，並利用這些特徵預測未來的疾病結果。這突顯了 DL '
+               '解決方案在識別未來有疾病風險的患者方面的潛力，並為臨床醫生提供了理解和評估這些預測驅動因素的方法。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '本文研究了深度學習 (DL) 方法從電子健康記錄 (EHR) 預測未來疾病診斷以進行人口健康管理的能力。在接下來的 3 年裡，包含這些嵌入的患者記錄被饋送到雙向門控循環單元 (GRU) '
+               '模型中，以預測患者罹患 2 型糖尿病、慢性阻塞性肺病 (COPD)、高血壓或急性心肌梗塞 (MI) 的可能性。我們在糖尿病預測中實現了 0.92 的接收者操作特徵曲線下面積值，COPD 為 '
+               '0.94，高血壓為 0.92，MI 為 0.94。SHAP 值顯示，模型學習了已知與這些結果相關的特徵。本研究中概述的 DL 方法可以從大規模 EHR '
+               '數據中識別臨床相關特徵，並使用這些特徵預測未來的疾病結果。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               'Search results: \n'
+               '\n'
+               '\n'
+               '\n'
+               '--- SOURCE 1: The Impact of Artificial Intelligence on Healthcare: A Comprehensive ... ---\n'
+               'URL: https://pmc.ncbi.nlm.nih.gov/articles/PMC11702416/\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '這是一篇關於人工智慧 (AI) 對醫療保健影響的綜合性回顧，檢視了其在診斷、治療和營運效率方面的進展。該研究旨在描述 AI 在醫療保健中的作用，包括機器學習 (ML)、深度學習 (DL) 和自然語言處理 '
+               '(NLP) 等關鍵技術，並探討其在患者互動、預測分析和遠端監控中的應用。\n'
+               '\n'
+               '該回顧發現，AI 正在顯著增強醫療專業人員的能力，改善診斷準確性，並為個人化治療計劃鋪路。這一趨勢反映在 AI 相關醫療保健出版物的穩定增長上，從 2014 年的 158 篇文章增長到 2024 年的 '
+               '731 篇。然而，主流實施面臨著數據安全問題和預算限制等重大障礙。\n'
+               '\n'
+               '全球醫療保健 AI 市場預計將從 2023 年的 112 億美元增長到 2032 年的 4275 億美元，複合年增長率 (CAGR) 為 47.6%。儘管 AI '
+               '有潛力徹底改變醫療保健，但其成功利用需要道德和負責任的使用。該研究強調了持續研究、教育和多學科合作的必要性，以應對不斷變化的醫療保健需求並確保 AI 技術的負責任應用。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '這項研究旨在描述醫療保健中的 AI，包括機器人技術、機器學習 (ML)、深度學習 (DL) 和自然語言處理 (NLP) 等重要技術，並研究這些技術如何應用於患者互動、預測分析和遠端監控。,\n'
+               '研究結果表明，AI 正在提升醫療專業人員的技能，增強診斷能力，並為更個人化的治療計劃開啟了大門，這反映在 AI 相關醫療保健出版物從 2014 年的 158 篇 (3.54%) 穩步增長到 2024 年的 '
+               '731 篇 (16.33%)。,\n'
+               '醫療保健可能被 AI 改變，但其成功使用需要道德和負責任的使用。為了滿足醫療保健行業不斷變化的需求並保證 AI 技術的負責任應用，評估強調了持續研究、指導和多學科合作的必要性。,\n'
+               '在診斷方面，AI 驅動的診斷工具在診斷包括癌症、心臟問題和神經系統疾病在內的疾病方面表現出卓越的準確性，尤其是在醫學影像領域。這些技術在這方面的表現經常優於人類臨床醫生。,\n'
+               '醫療保健 AI 預計將以 47.6% 的複合年增長率 (CAGR) 擴張，從 2023 年的 112 億美元增長到 2032 年的 4275 億美元。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               'Search results: \n'
+               '\n'
+               '\n'
+               '\n'
+               '--- SOURCE 1: AI in diagnostic imaging: Revolutionising accuracy and efficiency ---\n'
+               'URL: https://www.sciencedirect.com/science/article/pii/S2666990024000132\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '一篇發表於《電腦方法與生物醫學程式更新》期刊的評論文章，探討了自2019年以來人工智慧 (AI) 在徹底改變醫療診斷影像領域（如 X 光、MRI 和 CT 掃描）中的作用。該研究根據對 '
+               'PubMed、Embase 和 Google Scholar 等資料庫的文獻回顧，並納入 30 項研究，確定了 AI 應用的四個關鍵領域：\n'
+               '\n'
+               '1.  **影像分析與判讀：** AI 透過找出微小的差異和異常來增強影像分析，從而減少人為錯誤並提高準確性。\n'
+               '2.  **營運效率：** AI 加速了診斷流程，提高了效率和速度，並透過提高準確性來降低醫療成本。\n'
+               '3.  **預測性與個人化醫療：** AI 利用歷史數據進行預測分析以實現早期疾病檢測，並使用患者特定數據來制定個人化的診斷方法。\n'
+               '4.  **臨床決策支援：** AI 透過提供精確的影像支援來協助複雜的程序，並與電子健康記錄等其他技術整合。\n'
+               '\n'
+               '結論強調，AI 正在透過提高準確性、效率和個人化醫療服務來徹底改變診斷影像。該評論建議持續投資 AI、建立道德準則、為醫療專業人員提供培訓，並確保以患者為中心的 AI 發展。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '這篇評論評估了 AI 技術的最新進展及其在解釋 X 光、MRI 和 CT 掃描等醫學影像方面的變革性影響，重點關注自 2019 年以來發表的文獻。,根據 30 項選定的研究證明，確定了四個關鍵的 AI '
+               '領域：增強的影像分析、營運效率、預測性和個人化醫療保健以及臨床決策支援。,該評論討論了 AI 增強的影像分析如何顯著減少錯誤並加速診斷過程，從而加快患者診斷速度並降低醫療成本。,該評論討論了 AI '
+               '在預測分析中對早期疾病檢測和個人化醫療的作用，表明向更量身定制的醫療保健方法轉變。,建議包括持續的 AI 投資、建立道德準則、專業培訓和以患者為中心的 AI 開發。\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'
+               '--- SOURCE 2: Challenges of AI Integration in Healthcare - Ominext ---\n'
+               'URL: https://www.ominext.com/en/blog/challenges-of-ai-integration-in-healthcare\n'
+               '\n'
+               'SUMMARY:\n'
+               '<summary>\n'
+               '將人工智慧 (AI) 整合到醫療保健領域帶來了巨大的潛力，但面臨著幾個重大挑戰。主要障礙包括：\n'
+               '\n'
+               '1.  **資料安全和隱私問題**：由於醫療保健數據的敏感性，需要強大的加密、存取控制和遵守 HIPAA 等法規。\n'
+               '2.  **數據不足**：AI 演算法需要大量高品質的數據才能進行準確的預測，這需要更好的數據收集、儲存和共享策略。\n'
+               '3.  **互操作性問題**：AI 系統必須與現有的醫療保健 IT 基礎設施無縫整合，這需要標準化的格式和平台之間的協作。\n'
+               '4.  **法規遵循**：遵守像 HIPAA 這樣的嚴格醫療保健法規，在實施 AI 時增加了複雜性，需要透明和負責任的決策流程。\n'
+               '5.  **道德和偏見問題**：AI 演算法可能會延續醫療保健中現有的偏見。解決方案包括定期審核、決策透明化以及對醫療保健專業人員進行 AI 限制的教育。\n'
+               '6.  **採用阻力**：由於對工作安全和工作流程變化的擔憂，醫療保健專業人員可能會抵制新技術。有效的變革管理、教育和證明 AI 的好處至關重要。\n'
+               '7.  **財務障礙**：AI 實施的初始投資成本很高。克服這個問題需要仔細的規劃、戰略投資和政府與私人實體的合作夥伴關係。\n'
+               '\n'
+               '文章的結論是，透過解決這些挑戰，醫療保健組織可以成功地利用 AI 來改善患者護理和營運效率。\n'
+               '</summary>\n'
+               '\n'
+               '<key_excerpts>\n'
+               '「人工智慧 (AI) 有潛力徹底改變醫療保健，有望實現更早的診斷、更有效的治療，甚至是預防措施。」, 「資料安全和隱私問題是將 AI 整合到醫療保健中的巨大挑戰。」, 「AI '
+               '演算法有可能延續甚至加劇醫療保健中現有的偏見。」, 「克服這些財務挑戰需要仔細的規劃、協作和戰略投資。」, 「透過應對這些挑戰，醫療保健組織可以成功地將 AI '
+               '整合到其系統中，從而改善患者護理和營運效率。」\n'
+               '</key_excerpts>\n'
+               '\n'
+               '\n'
+               '\n'
+               '--------------------------------------------------------------------------------\n'
+               '\n'
+               '\n'],
+ 'research_brief': '我想全面了解自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。我的研究應著重於以下幾個方面：\n'
+                   '\n'
+                   '1. **AI 技術**：探討哪些具體的 AI 技術（例如機器學習、深度學習、電腦視覺、自然語言處理）在醫療診斷中取得了突破。\n'
+                   '2. **醫療專科應用**：調查 AI 在不同醫療領域（如放射學、病理學、腫瘤學、心臟病學等）的具體應用實例。請提供不同領域的範例，不要侷限於單一專科。\n'
+                   '3. **診斷任務**：具體說明 AI 如何被用於執行特定的診斷任務，例如：分析醫學影像以檢測疾病、從電子健康記錄預測疾病風險、輔助早期疾病篩檢等。\n'
+                   '4. **影響與挑戰**：評估這些新應用的主要優勢（如提高準確率、效率）以及它們在實際臨床應用中面臨的挑戰與限制（如數據隱私、法規障礙、與現有工作流程的整合）。\n'
+                   '\n'
+                   '在進行研究時，請優先參考發表在權威學術期刊或主要會議上的原始研究論文，以確保資訊的準確性和深度。',
+ 'supervisor_messages': [SystemMessage(content='您是一位研究監督者。您的工作是通過調用「ConductResearch」工具進行研究。上下文，今天的日期是 Mon Oct 13, 2025。\n\n<任務>\n您的重點是調用「ConductResearch」工具對使用者傳入的整體研究問題進行研究。\n當您完全滿意工具調用返回的研究發現時，您應該調用「ResearchComplete」工具來表示您已完成研究。\n</任務>\n\n<可用工具>\n您可以訪問三個主要工具：\n1. **ConductResearch**：將研究任務委派給專業的子代理\n2. **ResearchComplete**：表示研究完成\n3. **think_tool**：用於研究期間的反思和戰略規劃\n\n**關鍵：在調用 ConductResearch 之前使用 think_tool 規劃您的方法，在每次 ConductResearch 之後評估進度。不要與任何其他工具並行調用 think_tool。**\n</可用工具>\n\n<指示>\n像一個時間和資源有限的研究經理一樣思考。遵循這些步驟：\n\n1. **仔細閱讀問題** - 使用者需要什麼具體資訊？\n2. **決定如何委派研究** - 仔細考慮問題並決定如何委派研究。是否有多個可以同時探索的獨立方向？\n3. **在每次調用 ConductResearch 後，暫停並評估** - 我有足夠的資訊來回答嗎？還缺少什麼？\n</指示>\n\n<硬限制>\n**任務委派預算**（防止過度委派）：\n- **偏向單一代理** - 為簡化起見使用單一代理，除非使用者請求有明確的並行化機會\n- **當能夠自信回答時停止** - 不要為了完美而繼續委派研究\n- **限制工具調用** - 如果找不到正確的來源，在 3 次 ConductResearch 和 think_tool 工具調用後始終停止\n\n**每次迭代最多 2 個並行代理**\n</硬限制>\n\n<展示您的思考>\n在調用 ConductResearch 工具之前，使用 think_tool 規劃您的方法：\n- 任務可以分解為更小的子任務嗎？\n\n在每次 ConductResearch 工具調用後，使用 think_tool 分析結果：\n- 我找到了什麼關鍵資訊？\n- 缺少什麼？\n- 我有足夠的資訊來全面回答問題嗎？\n- 我應該委派更多研究還是調用 ResearchComplete？\n</展示您的思考>\n\n<擴展規則>\n**簡單的事實查找、列表和排名** 可以使用單一子代理：\n- *示例*：列出舊金山前 10 名咖啡店 → 使用 1 個子代理\n\n**使用者請求中呈現的比較** 可以為比較的每個元素使用一個子代理：\n- *示例*：比較 OpenAI vs. Anthropic vs. DeepMind 的 AI 安全方法 → 使用 3 個子代理\n- 委派清晰、獨特、不重疊的子主題\n\n**重要提醒：**\n- 每次 ConductResearch 調用都會為該特定主題生成一個專用的研究代理\n- 一個單獨的代理將撰寫最終報告 - 您只需要收集資訊\n- 調用 ConductResearch 時，提供完整的獨立指示 - 子代理看不到其他代理的工作\n- 在您的研究問題中不要使用縮寫或簡稱，要非常清晰和具體\n</擴展規則>', additional_kwargs={}, response_metadata={}),
+                         HumanMessage(content='我想全面了解自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。我的研究應著重於以下幾個方面：\n\n1. **AI 技術**：探討哪些具體的 AI 技術（例如機器學習、深度學習、電腦視覺、自然語言處理）在醫療診斷中取得了突破。\n2. **醫療專科應用**：調查 AI 在不同醫療領域（如放射學、病理學、腫瘤學、心臟病學等）的具體應用實例。請提供不同領域的範例，不要侷限於單一專科。\n3. **診斷任務**：具體說明 AI 如何被用於執行特定的診斷任務，例如：分析醫學影像以檢測疾病、從電子健康記錄預測疾病風險、輔助早期疾病篩檢等。\n4. **影響與挑戰**：評估這些新應用的主要優勢（如提高準確率、效率）以及它們在實際臨床應用中面臨的挑戰與限制（如數據隱私、法規障礙、與現有工作流程的整合）。\n\n在進行研究時，請優先參考發表在權威學術期刊或主要會議上的原始研究論文，以確保資訊的準確性和深度。', additional_kwargs={}, response_metadata={}),
+                         SystemMessage(content='您是一位研究監督者。您的工作是通過調用「ConductResearch」工具進行研究。上下文，今天的日期是 Mon Oct 13, 2025。\n\n<任務>\n您的重點是調用「ConductResearch」工具對使用者傳入的整體研究問題進行研究。\n當您完全滿意工具調用返回的研究發現時，您應該調用「ResearchComplete」工具來表示您已完成研究。\n</任務>\n\n<可用工具>\n您可以訪問三個主要工具：\n1. **ConductResearch**：將研究任務委派給專業的子代理\n2. **ResearchComplete**：表示研究完成\n3. **think_tool**：用於研究期間的反思和戰略規劃\n\n**關鍵：在調用 ConductResearch 之前使用 think_tool 規劃您的方法，在每次 ConductResearch 之後評估進度。不要與任何其他工具並行調用 think_tool。**\n</可用工具>\n\n<指示>\n像一個時間和資源有限的研究經理一樣思考。遵循這些步驟：\n\n1. **仔細閱讀問題** - 使用者需要什麼具體資訊？\n2. **決定如何委派研究** - 仔細考慮問題並決定如何委派研究。是否有多個可以同時探索的獨立方向？\n3. **在每次調用 ConductResearch 後，暫停並評估** - 我有足夠的資訊來回答嗎？還缺少什麼？\n</指示>\n\n<硬限制>\n**任務委派預算**（防止過度委派）：\n- **偏向單一代理** - 為簡化起見使用單一代理，除非使用者請求有明確的並行化機會\n- **當能夠自信回答時停止** - 不要為了完美而繼續委派研究\n- **限制工具調用** - 如果找不到正確的來源，在 3 次 ConductResearch 和 think_tool 工具調用後始終停止\n\n**每次迭代最多 2 個並行代理**\n</硬限制>\n\n<展示您的思考>\n在調用 ConductResearch 工具之前，使用 think_tool 規劃您的方法：\n- 任務可以分解為更小的子任務嗎？\n\n在每次 ConductResearch 工具調用後，使用 think_tool 分析結果：\n- 我找到了什麼關鍵資訊？\n- 缺少什麼？\n- 我有足夠的資訊來全面回答問題嗎？\n- 我應該委派更多研究還是調用 ResearchComplete？\n</展示您的思考>\n\n<擴展規則>\n**簡單的事實查找、列表和排名** 可以使用單一子代理：\n- *示例*：列出舊金山前 10 名咖啡店 → 使用 1 個子代理\n\n**使用者請求中呈現的比較** 可以為比較的每個元素使用一個子代理：\n- *示例*：比較 OpenAI vs. Anthropic vs. DeepMind 的 AI 安全方法 → 使用 3 個子代理\n- 委派清晰、獨特、不重疊的子主題\n\n**重要提醒：**\n- 每次 ConductResearch 調用都會為該特定主題生成一個專用的研究代理\n- 一個單獨的代理將撰寫最終報告 - 您只需要收集資訊\n- 調用 ConductResearch 時，提供完整的獨立指示 - 子代理看不到其他代理的工作\n- 在您的研究問題中不要使用縮寫或簡稱，要非常清晰和具體\n</擴展規則>', additional_kwargs={}, response_metadata={}),
+                         HumanMessage(content='我想全面了解自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。我的研究應著重於以下幾個方面：\n\n1. **AI 技術**：探討哪些具體的 AI 技術（例如機器學習、深度學習、電腦視覺、自然語言處理）在醫療診斷中取得了突破。\n2. **醫療專科應用**：調查 AI 在不同醫療領域（如放射學、病理學、腫瘤學、心臟病學等）的具體應用實例。請提供不同領域的範例，不要侷限於單一專科。\n3. **診斷任務**：具體說明 AI 如何被用於執行特定的診斷任務，例如：分析醫學影像以檢測疾病、從電子健康記錄預測疾病風險、輔助早期疾病篩檢等。\n4. **影響與挑戰**：評估這些新應用的主要優勢（如提高準確率、效率）以及它們在實際臨床應用中面臨的挑戰與限制（如數據隱私、法規障礙、與現有工作流程的整合）。\n\n在進行研究時，請優先參考發表在權威學術期刊或主要會議上的原始研究論文，以確保資訊的準確性和深度。', additional_kwargs={}, response_metadata={}),
+                         AIMessage(content='', additional_kwargs={'function_call': {'name': 'think_tool', 'arguments': '{"reflection": "\\u6211\\u5c07\\u628a\\u4f7f\\u7528\\u8005\\u7684\\u8acb\\u6c42\\u5206\\u89e3\\u70ba\\u5169\\u500b\\u4e26\\u884c\\u7814\\u7a76\\u4efb\\u52d9\\uff0c\\u4ee5\\u6709\\u6548\\u5730\\u6db5\\u84cb\\u6240\\u6709\\u65b9\\u9762\\u3002\\n\\n\\u4efb\\u52d9 1\\uff1a\\u5c08\\u6ce8\\u65bc\\u4f7f\\u7528\\u8005\\u8acb\\u6c42\\u7684\\u7b2c 1\\u30012 \\u548c 3 \\u9ede\\u3002\\u8a72\\u4ee3\\u7406\\u5c07\\u7814\\u7a76\\u81ea 2023 \\u5e74\\u521d\\u4ee5\\u4f86\\uff0c\\u5728\\u91ab\\u7642\\u8a3a\\u65b7\\u4e2d\\u4f7f\\u7528\\u7684\\u5177\\u9ad4\\u4eba\\u5de5\\u667a\\u6167\\u6280\\u8853\\uff08\\u6a5f\\u5668\\u5b78\\u7fd2\\u3001\\u6df1\\u5ea6\\u5b78\\u7fd2\\u3001\\u96fb\\u8166\\u8996\\u89ba\\u3001\\u81ea\\u7136\\u8a9e\\u8a00\\u8655\\u7406\\uff09\\u3001\\u5b83\\u5011\\u5728\\u5404\\u500b\\u91ab\\u7642\\u5c08\\u79d1\\uff08\\u653e\\u5c04\\u5b78\\u3001\\u75c5\\u7406\\u5b78\\u3001\\u816b\\u7624\\u5b78\\u3001\\u5fc3\\u81df\\u75c5\\u5b78\\uff09\\u7684\\u61c9\\u7528\\uff0c\\u4ee5\\u53ca\\u5b83\\u5011\\u57f7\\u884c\\u7684\\u5177\\u9ad4\\u8a3a\\u65b7\\u4efb\\u52d9\\uff08\\u5f71\\u50cf\\u5206\\u6790\\u3001\\u98a8\\u96aa\\u9810\\u6e2c\\uff09\\u3002\\n\\n\\u4efb\\u52d9 2\\uff1a\\u5c08\\u6ce8\\u65bc\\u4f7f\\u7528\\u8005\\u8acb\\u6c42\\u7684\\u7b2c 4 \\u9ede\\u3002\\u8a72\\u4ee3\\u7406\\u5c07\\u7814\\u7a76\\u9019\\u4e9b\\u4eba\\u5de5\\u667a\\u6167\\u61c9\\u7528\\u7684\\u5f71\\u97ff\\u548c\\u6311\\u6230\\uff0c\\u5305\\u62ec\\u512a\\u52e2\\uff08\\u4f8b\\u5982\\uff0c\\u63d0\\u9ad8\\u6e96\\u78ba\\u7387\\u3001\\u6548\\u7387\\uff09\\u548c\\u969c\\u7919\\uff08\\u4f8b\\u5982\\uff0c\\u6578\\u64da\\u96b1\\u79c1\\u3001\\u6cd5\\u898f\\u3001\\u5de5\\u4f5c\\u6d41\\u7a0b\\u6574\\u5408\\uff09\\u3002\\n\\n\\u9019\\u7a2e\\u5206\\u5de5\\u5141\\u8a31\\u4e00\\u500b\\u4ee3\\u7406\\u5c08\\u6ce8\\u65bc\\u6280\\u8853\\u548c\\u61c9\\u7528\\uff0c\\u800c\\u53e6\\u4e00\\u500b\\u4ee3\\u7406\\u5247\\u8a55\\u4f30\\u5176\\u66f4\\u5ee3\\u6cdb\\u7684\\u5f71\\u97ff\\u548c\\u5be6\\u969b\\u5be6\\u65bd\\u4e2d\\u7684\\u8003\\u616e\\u56e0\\u7d20\\u3002\\u5169\\u500b\\u4ee3\\u7406\\u90fd\\u5c07\\u512a\\u5148\\u8003\\u616e\\u4f86\\u81ea\\u6b0a\\u5a01\\u5b78\\u8853\\u4f86\\u6e90\\u7684\\u8cc7\\u8a0a\\u3002"}'}, '__gemini_function_call_thought_signatures__': {'0acc841f-09b5-4f09-a8c7-18dbea8161fb': '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'}}, response_metadata={'is_blocked': False, 'safety_ratings': [], 'usage_metadata': {'prompt_token_count': 1084, 'candidates_token_count': 239, 'total_token_count': 2692, 'prompt_tokens_details': [{'modality': 1, 'token_count': 1084}], 'candidates_tokens_details': [{'modality': 1, 'token_count': 239}], 'thoughts_token_count': 1369, 'cached_content_token_count': 0, 'cache_tokens_details': []}, 'finish_reason': 'STOP', 'avg_logprobs': -1.2459829162853033, 'model_name': 'gemini-2.5-pro'}, id='run--9d642dec-9966-41f5-876b-5a37bb9c20fe-0', tool_calls=[{'name': 'think_tool', 'args': {'reflection': '我將把使用者的請求分解為兩個並行研究任務，以有效地涵蓋所有方面。\n\n任務 1：專注於使用者請求的第 1、2 和 3 點。該代理將研究自 2023 年初以來，在醫療診斷中使用的具體人工智慧技術（機器學習、深度學習、電腦視覺、自然語言處理）、它們在各個醫療專科（放射學、病理學、腫瘤學、心臟病學）的應用，以及它們執行的具體診斷任務（影像分析、風險預測）。\n\n任務 2：專注於使用者請求的第 4 點。該代理將研究這些人工智慧應用的影響和挑戰，包括優勢（例如，提高準確率、效率）和障礙（例如，數據隱私、法規、工作流程整合）。\n\n這種分工允許一個代理專注於技術和應用，而另一個代理則評估其更廣泛的影響和實際實施中的考慮因素。兩個代理都將優先考慮來自權威學術來源的資訊。'}, 'id': '0acc841f-09b5-4f09-a8c7-18dbea8161fb', 'type': 'tool_call'}], usage_metadata={'input_tokens': 1084, 'output_tokens': 239, 'total_tokens': 2692, 'input_token_details': {'cache_read': 0}, 'output_token_details': {'reasoning': 1369}}),
+                         ToolMessage(content='Reflection recorded: 我將把使用者的請求分解為兩個並行研究任務，以有效地涵蓋所有方面。\n\n任務 1：專注於使用者請求的第 1、2 和 3 點。該代理將研究自 2023 年初以來，在醫療診斷中使用的具體人工智慧技術（機器學習、深度學習、電腦視覺、自然語言處理）、它們在各個醫療專科（放射學、病理學、腫瘤學、心臟病學）的應用，以及它們執行的具體診斷任務（影像分析、風險預測）。\n\n任務 2：專注於使用者請求的第 4 點。該代理將研究這些人工智慧應用的影響和挑戰，包括優勢（例如，提高準確率、效率）和障礙（例如，數據隱私、法規、工作流程整合）。\n\n這種分工允許一個代理專注於技術和應用，而另一個代理則評估其更廣泛的影響和實際實施中的考慮因素。兩個代理都將優先考慮來自權威學術來源的資訊。', name='think_tool', tool_call_id='0acc841f-09b5-4f09-a8c7-18dbea8161fb'),
+                         AIMessage(content='', additional_kwargs={'function_call': {'name': 'ConductResearch', 'arguments': '{"research_topic": "\\u81ea2023\\u5e74\\u521d\\u4ee5\\u4f86\\uff0c\\u5c0d\\u4eba\\u5de5\\u667a\\u6167\\u5728\\u91ab\\u7642\\u8a3a\\u65b7\\u9818\\u57df\\u65b0\\u61c9\\u7528\\u7684\\u5f71\\u97ff\\u548c\\u6311\\u6230\\u9032\\u884c\\u5168\\u9762\\u8a55\\u4f30\\u3002\\u672c\\u7814\\u7a76\\u61c9\\u63a2\\u8a0e\\u9019\\u4e9b\\u6280\\u8853\\u7684\\u4e3b\\u8981\\u512a\\u52e2\\uff0c\\u4f8b\\u5982\\u5728\\u8a3a\\u65b7\\u6e96\\u78ba\\u7387\\u3001\\u6548\\u7387\\u548c\\u901f\\u5ea6\\u65b9\\u9762\\u7684\\u63d0\\u9ad8\\u3002\\u540c\\u6642\\uff0c\\u5fc5\\u9808\\u6df1\\u5165\\u7814\\u7a76\\u5728\\u5be6\\u969b\\u81e8\\u5e8a\\u61c9\\u7528\\u4e2d\\u9762\\u81e8\\u7684\\u91cd\\u5927\\u6311\\u6230\\u548c\\u9650\\u5236\\u3002\\u9019\\u5305\\u62ec\\u6578\\u64da\\u96b1\\u79c1\\u554f\\u984c\\u3001\\u61c9\\u5c0d\\u8907\\u96dc\\u7684\\u76e3\\u7ba1\\u548c\\u6cd5\\u5f8b\\u969c\\u7919\\u3001\\u4ee5\\u53ca\\u5c07\\u65b0\\u7684\\u4eba\\u5de5\\u667a\\u6167\\u7cfb\\u7d71\\u8207\\u73fe\\u6709\\u91ab\\u9662\\u5de5\\u4f5c\\u6d41\\u7a0b\\u548c\\u57fa\\u790e\\u8a2d\\u65bd\\u6574\\u5408\\u7684\\u6280\\u8853\\u548c\\u5be6\\u8e10\\u56f0\\u96e3\\u3002\\u7814\\u7a76\\u61c9\\u53c3\\u8003\\u5b78\\u8853\\u51fa\\u7248\\u7269\\u3001\\u884c\\u696d\\u5831\\u544a\\u548c\\u76e3\\u7ba1\\u6307\\u5357\\uff0c\\u4ee5\\u63d0\\u4f9b\\u4e00\\u500b\\u5e73\\u8861\\u4e14\\u6709\\u5145\\u5206\\u4f9d\\u64da\\u7684\\u8a55\\u4f30\\u3002"}'}}, response_metadata={'is_blocked': False, 'safety_ratings': [], 'usage_metadata': {'prompt_token_count': 1565, 'candidates_token_count': 322, 'total_token_count': 1887, 'prompt_tokens_details': [{'modality': 1, 'token_count': 2932}], 'candidates_tokens_details': [{'modality': 1, 'token_count': 322}], 'thoughts_token_count': 0, 'cached_content_token_count': 0, 'cache_tokens_details': []}, 'finish_reason': 'STOP', 'avg_logprobs': -0.17649766673212466, 'model_name': 'gemini-2.5-pro'}, id='run--804013bc-cb22-47eb-bd32-799c35a9eacd-0', tool_calls=[{'name': 'ConductResearch', 'args': {'research_topic': '自2023年初以來，針對應用於醫療診斷的人工智慧技術、醫療專科和具體診斷任務進行詳細研究。這項研究應側重於確定哪些具體的人工智慧技術（如機器學習、深度學習、電腦視覺和自然語言處理）取得了重大進展。此外，研究應提供這些技術在不同醫療專科（包括但不限於放射學、病理學、腫瘤學和心臟病學）中應用的具體實例。最後，應詳細說明人工智慧如何用於特定的診斷任務，例如分析醫學影像以檢測疾病、從電子健康記錄中預測疾病風險以及輔助早期疾病篩檢。所有發現都應優先引用權威學術期刊和主要會議的原始研究論文。'}, 'id': 'a76f2b00-0965-41f5-a9a8-18d39ad5d984', 'type': 'tool_call'}, {'name': 'ConductResearch', 'args': {'research_topic': '自2023年初以來，對人工智慧在醫療診斷領域新應用的影響和挑戰進行全面評估。本研究應探討這些技術的主要優勢，例如在診斷準確率、效率和速度方面的提高。同時，必須深入研究在實際臨床應用中面臨的重大挑戰和限制。這包括數據隱私問題、應對複雜的監管和法律障礙、以及將新的人工智慧系統與現有醫院工作流程和基礎設施整合的技術和實踐困難。研究應參考學術出版物、行業報告和監管指南，以提供一個平衡且有充分依據的評估。'}, 'id': 'fd3c581b-87ed-4b1b-ab5c-10590225f9a4', 'type': 'tool_call'}], usage_metadata={'input_tokens': 1565, 'output_tokens': 322, 'total_tokens': 1887, 'input_token_details': {'cache_read': 0}}),
+                         ToolMessage(content='好的，這是根據您的研究整理的清理後發現。\n\n### **查詢和工具調用列表**\n\n| **步驟** | **查詢** | **使用的工具** |\n| --- | --- | --- |\n| 1 | advancements in AI for medical diagnosis 2023-2024 academic review | tavily_search |\n| 2 | 反思：初始搜索提供了一份高度相關的社論，總結了2023年關於醫學診斷中AI的特刊。這為我提供了一個極好的概述以及在放射學、心臟病學和病理學方面的具體例子。我有一個很好的起點，但需要更多關於所使用的特定AI模型、其性能以及更多關於腫瘤學和從電子病歷中提取自然語言處理的詳細資訊。我的下一步是搜索社論中提到的原始研究論文，並對覆蓋較少的領域進行搜索。 | think_tool |\n| 3 | "AI automatic classification of coronary artery stenosis 2023 journal", "deep learning for breast cancer classification 2023 academic paper", "AI in oncology diagnosis review 2023-2024" | tavily_search |\n| 4 | 反思：之前的搜索為心臟病學（AI-FFR）和病理學（使用視覺轉換器進行乳癌分類）中的AI提供了出色且具體的例子，以及對腫瘤學中AI的良好概述。我擁有用戶要求的指標、模型名稱和來源類型。剩下的主要差距是使用自然語言處理（NLP）從電子健康記錄（EHR）中進行疾病風險預測的詳細例子。我的下一次搜索將高度針對性地填補這一特定差距。之後，我應該有足夠的資訊來提供一個全面的答案。 | think_tool |\n| 5 | natural language processing to predict disease risk from electronic health records 2023-2024 research | tavily_search |\n\n### **完全全面的發現**\n\n**概述與背景**\n\n一項於2024年發表的社論，介紹了名為「人工智慧在醫學電腦輔助診斷中的進展」的特刊，該特刊收錄了2023年3月至2023年12月期間收集的12篇研究文章。該社論指出，快速發展的人工智慧（AI）和機器學習（ML）正在改變診斷領域，在疾病檢測、分類和治療計劃方面實現了前所未有的準確性和效率 [1]。另一篇於2024年5月發表的綜述指出，腫瘤學領域的人工智慧（AI）正在從演算法開發階段發展到臨床實踐的整合階段 [3]。\n\n**具體AI技術的進展**\n\n**深度學習與電腦視覺**\n\n*   **放射學與心臟病學**：一項研究引入了一種新穎的全自動現場CT-FFR技術，該技術在463名患者的600條血管上進行了評估，準確率達到了0.82。計算過程被簡化，將操作步驟從約60步減少到僅一步 [2]。其他研究也驗證了AI-FFR技術的診斷性能。例如，一項研究表明，AI-FFR在檢測冠狀動脈狹窄方面的敏感性和特異性分別達到了91%和95%，總體準確率為94% [2]。\n*   **病理學與腫瘤學**：一項比較研究評估了八種用於乳癌組織病理學影像分類的深度學習模型。該研究發現，視覺轉換器（ViT）模型的表現優於所有傳統的卷積神經網路（CNN）模型，達到了最高的94%驗證準確率。在CNN模型中，EfficientNet的表現最佳，準確率為93%。被比較的模型包括ResNet-50、DenseNet-121、ResNeXt-50、GoogLeNet (Inception v3)、EfficientNet、MobileNet、SqueezeNet和視覺轉換器（ViT）。研究結論認為，ViT模型的自注意力機制在捕捉影像的全局和局部特徵方面具有優勢，使其成為此分類任務最有效的架構 [4]。\n*   **多模態應用**：社論 [1] 總結的研究涵蓋了多種應用，包括用於乳癌分類、膝關節骨性關節炎檢測和猴痘檢測的深度學習模型，以及用於心臟MR影像重建的深度學習框架。\n\n**自然語言處理（NLP）與大型語言模型（LLM）**\n\n*   **從電子健康記錄（EHR）預測疾病風險**：一篇於2024年1月8日發表的研究論文展示了一種可擴展的深度學習方法，用於從電子健康記錄預測疾病發作。研究人員使用Word2Vec演算法從EHR中常用的結構化詞彙（如SNOMED CT、NDC、LOINC）創建嵌入。這些嵌入隨後被饋送到一個雙向門控循環單元（GRU）模型中，以預測患者在未來3年內罹患2型糖尿病、慢性阻塞性肺病（COPD）、高血壓或心肌梗塞（MI）的可能性。該模型在預測糖尿病方面的接收者操作特徵曲線下面積（AUC）值為0.92，COPD為0.94，高血壓為0.92，心肌梗塞為0.94。該研究使用了SHapley Additive exPlanations（SHAP）值來實現模型的可解釋性 [5]。\n*   **大型語言模型**：社論 [1] 指出，像Gemini和GPT這樣基於LLM的工具在徹底改變醫療診斷方面具有巨大的潛力，例如提供更詳細的解釋和利用生成式AI創建合成醫學數據。該社論還提到評估AI模型（如ChatGPT）在判讀胸部X光片方面的準確性 [1]。\n\n**不同醫療專科的應用**\n\n*   **心臟病學**：將冠狀動脈電腦斷層血管攝影（CCTA）與人工智慧（AI）技術相結合，特別是基於AI的血流儲備分數（AI-FFR）評估，已成為診斷和治療冠狀動脈疾病（CAD）的關鍵工具 [2]。AI-FFR技術透過從CCTA數據中提取血液動力學資訊，可以非侵入性地評估冠狀動脈狹窄的功能意義 [2]。CREDENCE試驗對301名患者的研究顯示，AI-QCT（一種AI-FFR技術）在診斷性能上顯著優於心肌灌注顯像（MPI），並可將侵入性血管攝影的使用率減少高達49% [2]。\n*   **腫瘤學**：一篇2024年的綜述總結了AI在腫瘤學領域的現狀，指出AI應用正在走向臨床整合，涵蓋了影像、基因組學和醫療記錄等多種數據模式 [3]。一個具體的例子是對乳癌組織病理學影像的分類，其中視覺轉換器（ViT）模型達到了94%的驗證準確率 [4]。\n*   **放射學**：社論 [1] 提到了對AI模型（KARA-CXR和ChatGPT）在判讀胸部X光片方面的準確性進行評估的研究。\n*   **其他專科**：研究還涵蓋了透過聲音屬性檢測帕金森氏症，以及應用機器學習區分流感陽性和陰性患者 [1]。\n\n**具體的診斷任務**\n\n*   **分析醫學影像以檢測疾病**：\n    *   **冠狀動脈疾病**：AI-FFR技術利用深度學習分析CCTA影像，以非侵入性方式評估冠狀動脈狹窄的功能顯著性，準確率高達94% [2]。\n    *   **乳癌**：深度學習模型，特別是視覺轉換器（ViT），可成功分類組織病理學影像中的侵襲性導管癌（IDC），準確率達94% [4]。\n*   **從電子健康記錄（EHR）預測疾病風險**：\n    *   一篇2024年的研究使用雙向GRU模型分析來自約5000萬名患者的EHR數據，成功預測了未來3年內2型糖尿病（AUC 0.92）、COPD（AUC 0.94）、高血壓（AUC 0.92）和心肌梗塞（AUC 0.94）的發病風險 [5]。\n*   **輔助早期疾病篩檢**：\n    *   AI-FFR技術透過減少不必要的侵入性檢查，優化了CAD的診斷流程 [2]。\n    *   基於深度學習的乳癌影像分類提高了早期和準確乳癌檢測的效率和準確率 [4]。\n    *   從EHR預測疾病風險的方法有助於識別未來有疾病風險的患者，為臨床醫生提供早期干預的機會 [5]。\n\n**挑戰與未來方向**\n\n研究人員也承認了AI在醫學診斷中存在的一些局限性，例如研究結果的普適性有限、數據集不平衡等方法學上的限制，以及在真實臨床環境中可能高估模型性能的問題 [1]。在AI-FFR技術方面，演算法的穩健性、數據的異質性和臨床實施仍然是挑戰 [2]。未來的方向包括探索大型語言模型（LLM）的潛力，例如使用生成式AI創建合成醫學數據以克服數據集限制，以及探索對比學習等新技術 [1]。\n\n### **所有相關來源列表（在報告中有引用）**\n\n[1] Advancements in Artificial Intelligence for Medical ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC11202700/\n[2] Efficacy of artificial intelligence-based FFR technology for coronary ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC12350311/\n[3] Artificial Intelligence in Oncology: Current Landscape, Challenges ... : https://aacrjournals.org/cancerdiscovery/article/14/5/711/745040/Artificial-Intelligence-in-Oncology-Current\n[4] Evaluating Deep Learning Models for Breast Cancer Classification : https://arxiv.org/html/2408.16859v2\n[5] Predicting disease onset from electronic health records for ... : https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1287541/full', name='ConductResearch', tool_call_id='a76f2b00-0965-41f5-a9a8-18d39ad5d984'),
+                         ToolMessage(content='**查詢和工具調用列表**\n*   tavily_search: AI in medical diagnostics since early 2023 impact and challenges\n*   tavily_search: advantages of AI in medical diagnostics accuracy efficiency speed\n*   tavily_search: challenges of AI in medical diagnostics data privacy regulations and integration\n\n**完全全面的發現**\n\n**概覽與市場增長**\n自 2023 年初以來，人工智慧（AI）在醫療診斷領域持續發展，應用範圍涵蓋機器學習（ML）、深度學習（DL）和自然語言處理（NLP）等技術 [1]。這些技術被應用於患者互動、預測分析和遠端監控 [1]。全球醫療保健 AI 市場預計將從 2023 年的 112 億美元增長到 2032 年的 4275 億美元，複合年增長率（CAGR）為 47.6% [1]。此趨勢也反映在相關學術出版物的穩定增長上，從 2014 年的 158 篇增長到 2024 年的 731 篇 [1]。\n\n**影響與優勢**\nAI 技術有潛力徹底改變醫療保健，帶來更早的診斷和更有效的治療 [3]。它正在提升醫療專業人員的技能，增強診斷能力，並為更個人化的治療計劃開啟大門 [1]。\n\n*   **提高診斷準確率和效率**\n    *   在診斷方面，特別是在醫學影像領域，AI 驅動的診斷工具在診斷包括癌症、心臟問題和神經系統疾病在內的疾病方面表現出卓越的準確性，其表現經常優於人類臨床醫生 [1]。\n    *   一篇評論文章根據 30 項選定的研究，探討了 AI 在解釋 X 光、MRI 和 CT 掃描等醫學影像方面的變革性影響 [2]。\n    *   AI 透過找出微小的差異和異常來增強影像分析，從而顯著減少人為錯誤 [2]。\n    *   AI 加速了診斷流程，加快了患者診斷速度，進而降低醫療成本 [2]。\n\n*   **營運效率與臨床決策支援**\n    *   AI 技術提高了營運效率和速度 [2]。\n    *   AI 透過提供精確的影像支援來協助複雜的程序，並與電子健康記錄等其他技術整合，以提供臨床決策支援 [2]。\n\n*   **預測性與個人化醫療**\n    *   AI 利用歷史數據進行預測分析，以實現早期疾病檢測 [2]。\n    *   AI 使用患者特定數據來制定個人化的診斷方法，這表明醫療保健正朝著更量身定制的方向轉變 [2]。\n\n**挑戰與限制**\n儘管 AI 有潛力徹底改變醫療保健，但其成功利用需要道德和負責任的使用 [1]。主流實施面臨著重大的障礙 [1]。\n\n*   **數據隱私與安全**\n    *   由於醫療保健數據的敏感性，資料安全和隱私問題是將 AI 整合到醫療保健中的巨大挑戰 [3, 1]。\n    *   需要強大的加密、存取控制和遵守如 HIPAA 等法規 [3]。\n\n*   **數據品質與數量**\n    *   AI 演算法需要大量高品質的數據才能進行準確的預測，這需要更好的數據收集、儲存和共享策略 [3]。\n\n*   **整合與互操作性**\n    *   AI 系統必須與現有的醫療保健 IT 基礎設施（如電子健康記錄）無縫整合，這需要標準化的格式和平台之間的協作 [3, 2]。\n\n*   **監管與法律障礙**\n    *   遵守像 HIPAA 這樣的嚴格醫療保健法規，在實施 AI 時增加了複雜性，需要透明和負責任的決策流程 [3]。\n\n*   **道德與偏見問題**\n    *   AI 演算法有可能延續甚至加劇醫療保健中現有的偏見 [3]。\n    *   解決方案包括對演算法進行定期審核、決策透明化以及對醫療保健專業人員進行 AI 限制的教育 [3]。\n\n*   **採用阻力與財務障礙**\n    *   由於對工作安全和工作流程變化的擔憂，醫療保健專業人員可能會抵制新技術。有效的變革管理、教育和證明 AI 的好處至關重要 [3]。\n    *   AI 實施的初始投資成本很高，這是一個財務障礙 [3, 1]。克服這個問題需要仔細的規劃、戰略投資以及政府與私人實體的合作夥伴關係 [3]。\n\n**未來方向與建議**\n為了應對不斷變化的醫療保健需求並保證 AI 技術的負責任應用，評估強調了持續研究、指導和多學科合作的必要性 [1]。建議包括持續的 AI 投資、建立道德準則、為醫療專業人員提供培訓，並確保以患者為中心的 AI 發展 [2]。透過應對這些挑戰，醫療保健組織可以成功地將 AI 整合到其系統中，從而改善患者護理和營運效率 [3]。\n\n**所有相關來源列表（在報告中有引用）**\n### 來源\n[1] The Impact of Artificial Intelligence on Healthcare: A Comprehensive ...: https://pmc.ncbi.nlm.nih.gov/articles/PMC11702416/\n[2] AI in diagnostic imaging: Revolutionising accuracy and efficiency: https://www.sciencedirect.com/science/article/pii/S2666990024000132\n[3] Challenges of AI Integration in Healthcare - Ominext: https://www.ominext.com/en/blog/challenges-of-ai-integration-in-healthcare', name='ConductResearch', tool_call_id='fd3c581b-87ed-4b1b-ab5c-10590225f9a4'),
+                         AIMessage(content='', additional_kwargs={'function_call': {'name': 'think_tool', 'arguments': '{"reflection": "\\u6211\\u5df2\\u7d93\\u6536\\u5230\\u4e86\\u5169\\u500b\\u7814\\u7a76\\u4ee3\\u7406\\u7684\\u7d50\\u679c\\u3002\\u7b2c\\u4e00\\u500b\\u4ee3\\u7406\\u6210\\u529f\\u5730\\u63d0\\u4f9b\\u4e86\\u81ea 2023 \\u5e74\\u521d\\u4ee5\\u4f86\\uff0c\\u4eba\\u5de5\\u667a\\u6167\\u5728\\u91ab\\u7642\\u8a3a\\u65b7\\u9818\\u57df\\u4e2d\\u4f7f\\u7528\\u7684\\u5177\\u9ad4\\u6280\\u8853\\uff08\\u6df1\\u5ea6\\u5b78\\u7fd2\\u3001\\u96fb\\u8166\\u8996\\u89ba\\u3001\\u81ea\\u7136\\u8a9e\\u8a00\\u8655\\u7406\\uff09\\u3001\\u5728\\u4e0d\\u540c\\u5c08\\u79d1\\uff08\\u5fc3\\u81df\\u75c5\\u5b78\\u3001\\u816b\\u7624\\u5b78\\u3001\\u75c5\\u7406\\u5b78\\uff09\\u7684\\u61c9\\u7528\\u5be6\\u4f8b\\uff0c\\u4ee5\\u53ca\\u5b83\\u5011\\u57f7\\u884c\\u7684\\u5177\\u9ad4\\u4efb\\u52d9\\uff08\\u5f71\\u50cf\\u5206\\u6790\\u3001\\u5f9e\\u96fb\\u5b50\\u75c5\\u6b77\\u9810\\u6e2c\\u98a8\\u96aa\\uff09\\u7684\\u8a73\\u7d30\\u8cc7\\u8a0a\\u3002\\u7814\\u7a76\\u7d50\\u679c\\u5f15\\u7528\\u4e86\\u591a\\u7bc7\\u5b78\\u8853\\u8ad6\\u6587\\uff0c\\u63d0\\u4f9b\\u4e86\\u6a21\\u578b\\u540d\\u7a31\\uff08\\u4f8b\\u5982\\uff0c\\u8996\\u89ba\\u8f49\\u63db\\u5668\\u3001GRU\\uff09\\u548c\\u6027\\u80fd\\u6307\\u6a19\\uff08\\u4f8b\\u5982\\uff0c\\u6e96\\u78ba\\u7387\\u3001AUC \\u5206\\u6578\\uff09\\u3002\\n\\n\\u7b2c\\u4e8c\\u500b\\u4ee3\\u7406\\u5168\\u9762\\u5730\\u6982\\u8ff0\\u4e86\\u9019\\u4e9b\\u61c9\\u7528\\u7684\\u5f71\\u97ff\\u548c\\u6311\\u6230\\uff0c\\u6db5\\u84cb\\u4e86\\u6e96\\u78ba\\u7387\\u548c\\u6548\\u7387\\u7684\\u63d0\\u9ad8\\u7b49\\u512a\\u52e2\\uff0c\\u4ee5\\u53ca\\u6578\\u64da\\u96b1\\u79c1\\u3001\\u6cd5\\u898f\\u969c\\u7919\\u548c\\u8207\\u73fe\\u6709\\u5de5\\u4f5c\\u6d41\\u7a0b\\u6574\\u5408\\u7b49\\u6311\\u6230\\u3002\\n\\n\\u7d9c\\u5408\\u4f86\\u770b\\uff0c\\u9019\\u5169\\u4efd\\u5831\\u544a\\u5b8c\\u5168\\u6db5\\u84cb\\u4e86\\u4f7f\\u7528\\u8005\\u539f\\u59cb\\u8acb\\u6c42\\u7684\\u6240\\u6709\\u56db\\u500b\\u8981\\u9ede\\u3002\\u8cc7\\u8a0a\\u8a73\\u7d30\\u3001\\u5177\\u9ad4\\uff0c\\u4e26\\u4ee5\\u6b0a\\u5a01\\u4f86\\u6e90\\u70ba\\u5f8c\\u76fe\\u3002\\u6211\\u6c92\\u6709\\u767c\\u73fe\\u4efb\\u4f55\\u91cd\\u5927\\u8cc7\\u8a0a\\u7f3a\\u53e3\\u3002\\u56e0\\u6b64\\uff0c\\u7814\\u7a76\\u968e\\u6bb5\\u5df2\\u7d93\\u5b8c\\u6210\\u3002"}'}, '__gemini_function_call_thought_signatures__': {'e95c6de4-f3aa-4d93-bae3-20e4549163ac': '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'}}, response_metadata={'is_blocked': False, 'safety_ratings': [], 'usage_metadata': {'prompt_token_count': 5677, 'candidates_token_count': 236, 'total_token_count': 6725, 'cached_content_token_count': 1875, 'prompt_tokens_details': [{'modality': 1, 'token_count': 7044}], 'cache_tokens_details': [{'modality': 1, 'token_count': 1875}], 'candidates_tokens_details': [{'modality': 1, 'token_count': 236}], 'thoughts_token_count': 812}, 'finish_reason': 'STOP', 'avg_logprobs': -0.5828506986973649, 'model_name': 'gemini-2.5-pro'}, id='run--89ac93b4-84df-4052-9aa0-e29bdb1a88fe-0', tool_calls=[{'name': 'think_tool', 'args': {'reflection': '我已經收到了兩個研究代理的結果。第一個代理成功地提供了自 2023 年初以來，人工智慧在醫療診斷領域中使用的具體技術（深度學習、電腦視覺、自然語言處理）、在不同專科（心臟病學、腫瘤學、病理學）的應用實例，以及它們執行的具體任務（影像分析、從電子病歷預測風險）的詳細資訊。研究結果引用了多篇學術論文，提供了模型名稱（例如，視覺轉換器、GRU）和性能指標（例如，準確率、AUC 分數）。\n\n第二個代理全面地概述了這些應用的影響和挑戰，涵蓋了準確率和效率的提高等優勢，以及數據隱私、法規障礙和與現有工作流程整合等挑戰。\n\n綜合來看，這兩份報告完全涵蓋了使用者原始請求的所有四個要點。資訊詳細、具體，並以權威來源為後盾。我沒有發現任何重大資訊缺口。因此，研究階段已經完成。'}, 'id': 'e95c6de4-f3aa-4d93-bae3-20e4549163ac', 'type': 'tool_call'}], usage_metadata={'input_tokens': 5677, 'output_tokens': 236, 'total_tokens': 6725, 'input_token_details': {'cache_read': 1875}, 'output_token_details': {'reasoning': 812}}),
+                         ToolMessage(content='Reflection recorded: 我已經收到了兩個研究代理的結果。第一個代理成功地提供了自 2023 年初以來，人工智慧在醫療診斷領域中使用的具體技術（深度學習、電腦視覺、自然語言處理）、在不同專科（心臟病學、腫瘤學、病理學）的應用實例，以及它們執行的具體任務（影像分析、從電子病歷預測風險）的詳細資訊。研究結果引用了多篇學術論文，提供了模型名稱（例如，視覺轉換器、GRU）和性能指標（例如，準確率、AUC 分數）。\n\n第二個代理全面地概述了這些應用的影響和挑戰，涵蓋了準確率和效率的提高等優勢，以及數據隱私、法規障礙和與現有工作流程整合等挑戰。\n\n綜合來看，這兩份報告完全涵蓋了使用者原始請求的所有四個要點。資訊詳細、具體，並以權威來源為後盾。我沒有發現任何重大資訊缺口。因此，研究階段已經完成。', name='think_tool', tool_call_id='e95c6de4-f3aa-4d93-bae3-20e4549163ac'),
+                         AIMessage(content='', additional_kwargs={'function_call': {'name': 'ResearchComplete', 'arguments': '{}'}}, response_metadata={'is_blocked': False, 'safety_ratings': [], 'usage_metadata': {'prompt_token_count': 6152, 'candidates_token_count': 2, 'total_token_count': 6154, 'cached_content_token_count': 5676, 'prompt_tokens_details': [{'modality': 1, 'token_count': 8329}], 'cache_tokens_details': [{'modality': 1, 'token_count': 5676}], 'candidates_tokens_details': [{'modality': 1, 'token_count': 2}], 'thoughts_token_count': 0}, 'finish_reason': 'STOP', 'avg_logprobs': -0.0207247044891119, 'model_name': 'gemini-2.5-pro'}, id='run--6e272431-226c-4925-824c-23d1cd3021d6-0', tool_calls=[{'name': 'ResearchComplete', 'args': {}, 'id': 'e2baa66b-6f3c-43bd-adb5-76ff6bcfb6fd', 'type': 'tool_call'}], usage_metadata={'input_tokens': 6152, 'output_tokens': 2, 'total_tokens': 6154, 'input_token_details': {'cache_read': 5676}})]}
+
+===== final_report =====
+# 總結報告：2023 年初以來人工智慧在醫療診斷領域的進展
+
+本報告全面概述了自 2023 年初以來，人工智慧 (AI) 在醫療診斷領域的最新應用和重大進展。報告整合了權威學術期刊和會議的最新研究，深入探討了具體的 AI 技術、在各醫療專科的應用、執行的診斷任務，以及這些創新所帶來的影響與挑戰。
+
+## 核心 AI 技術突破
+
+自 2023 年以來，多項 AI 技術在醫療診斷領域取得了顯著的突破，特別是在深度學習、電腦視覺和自然語言處理方面，這些技術正從演算法開發階段邁向臨床整合 [3]。
+
+### 深度學習與電腦視覺
+
+深度學習，特別是卷積神經網路 (CNN) 和新興的視覺轉換器 (ViT) 模型，持續在醫學影像分析中展現強大的能力。
+
+*   **視覺轉換器 (ViT) 的優越性**：一項 2024 年的研究比較了八種深度學習模型用於乳癌組織病理學影像的分類，結果顯示視覺轉換器 (ViT) 模型以 94% 的驗證準確率超越了所有傳統的 CNN 模型（如 ResNet、DenseNet）。研究指出，ViT 的自注意力機制能更有效地捕捉影像的全局和局部特徵，使其成為此類分類任務的頂尖架構 [4]。
+*   **多模態影像應用**：AI 模型在多種影像診斷任務中得到應用，包括乳癌分類、膝關節骨性關節炎檢測、猴痘檢測，以及心臟磁振造影 (MR) 的影像重建等 [1]。
+
+### 自然語言處理 (NLP) 與大型語言模型 (LLM)
+
+NLP 技術的進步，使其能夠從非結構化的電子健康記錄 (EHR) 中提取有價值的臨床資訊，並預測疾病風險。
+
+*   **從電子病歷預測疾病風險**：一項發表於 2024 年初的研究展示了一種創新的方法，該方法使用 Word2Vec 演算法和雙向門控循環單元 (GRU) 模型，分析來自約 5000 萬名患者的電子健康記錄。該模型成功預測了患者在未來三年內罹患多種慢性病的風險，其接收者操作特徵曲線下面積 (AUC) 值分別為：第 2 型糖尿病 0.92、慢性阻塞性肺病 (COPD) 0.94、高血壓 0.92，以及心肌梗塞 0.94。此研究也利用 SHAP (SHapley Additive exPlanations) 值來解釋模型決策，增加了其在臨床上的可信度 [5]。
+*   **大型語言模型的潛力**：像 Gemini 和 GPT 這樣的大型語言模型 (LLM) 被認為具有徹底改變醫療診斷的巨大潛力。它們不僅能提供更詳細的疾病解釋，還能利用生成式 AI 創建合成醫學數據，以解決訓練數據不足的問題 [1]。
+
+## 跨專科的具體應用實例
+
+AI 的應用已滲透到多個醫療專科，顯著提升了診斷的效率和準確性。
+
+### 心臟病學
+
+AI 技術，特別是基於 AI 的血流儲備分數 (AI-FFR)，已成為診斷冠狀動脈疾病 (CAD) 的關鍵工具。
+
+*   **AI-FFR 技術**：該技術結合冠狀動脈電腦斷層血管攝影 (CCTA)，透過深度學習分析影像，以非侵入性的方式評估冠狀動脈狹窄的功能性意義。研究顯示，AI-FFR 的整體診斷準確率可達 94%，敏感性和特異性分別為 91% 和 95% [2]。一項名為 CREDENCE 的臨床試驗更指出，AI-FFR 技術可將不必要的侵入性血管攝影檢查減少高達 49% [2]。
+
+### 腫瘤學與病理學
+
+在腫瘤學領域，AI 正在整合影像學、基因組學和醫療記錄等多種數據，以實現更精準的診斷。
+
+*   **乳癌組織病理學影像分析**：如前所述，深度學習模型（特別是視覺轉換器 ViT）能夠以高達 94% 的準確率自動分類乳癌組織病理學影像，這有助於病理學家更快、更準確地做出診斷，從而加速早期乳癌篩檢的流程 [4]。
+
+### 放射學
+
+AI 模型被用於輔助放射科醫生判讀各種醫學影像。一項研究評估了 AI 模型 (KARA-CXR) 和大型語言模型 (ChatGPT) 在判讀胸部 X 光片方面的準確性，顯示了 AI 在此領域的應用潛力 [1]。
+
+### 其他診斷任務
+
+*   **疾病風險預測**：利用自然語言處理分析電子健康記錄，AI 能夠在疾病症狀出現前提早識別高風險人群，為預防性干預提供寶貴的時間窗口 [5]。
+*   **早期疾病篩檢**：除了影像分析，AI 還被應用於其他篩檢場景，例如透過分析聲音特徵來檢測帕金森氏症，以及區分流感陽性與陰性患者 [1]。
+
+## 影響、挑戰與未來展望
+
+儘管 AI 在醫療診斷領域展現出巨大潛力，但其廣泛的臨床應用仍面臨多重挑戰。
+
+### 主要影響與優勢
+
+*   **提高準確率與效率**：AI 工具在分析醫學影像（如 X 光、MRI、CT 掃描）時，能識別出人類專家可能忽略的微小異常，從而顯著減少人為錯誤並提高診斷準確率 [7, 6]。
+*   **加速診斷流程**：AI 能夠快速處理大量數據，縮短診斷所需時間，進而可能降低醫療成本並加快患者獲得治療的速度 [7]。
+*   **實現個人化醫療**：透過分析患者特定的數據，AI 能夠制定個人化的診斷方法，推動醫療保健朝向更精準、更客製化的方向發展 [7]。
+
+### 挑戰與限制
+
+*   **數據隱私與安全**：醫療數據的極度敏感性使數據安全成為首要挑戰。AI 系統的實施必須嚴格遵守數據保護法規（如 HIPAA），並採用強大的加密和存取控制措施 [8, 6]。
+*   **數據品質與偏見**：AI 模型的性能高度依賴於大量、高品質、多樣化的訓練數據。數據集的不平衡或偏差可能導致模型產生歧視性或錯誤的結果，加劇醫療不平等 [8, 1]。
+*   **整合與互通性**：將新的 AI 系統與醫院現有的 IT 基礎設施（如電子健康記錄系統）無縫整合是一項重大的技術挑戰。這需要標準化的數據格式和平台間的協作 [8]。
+*   **法規與倫理障礙**：AI 診斷工具的審批流程複雜，且在發生誤診時的責任歸屬問題尚不清晰。此外，確保 AI 決策過程的透明度和可解釋性也是一個關鍵的倫理要求 [8]。
+*   **成本與採用阻力**：實施 AI 技術的初始投資成本高昂。同時，部分醫療專業人員可能因擔心工作被取代或工作流程被打亂而抵制新技術的採用 [8, 6]。
+
+### 未來展望
+
+為了充分發揮 AI 的潛力，未來的發展重點應包括：
+
+*   **持續的研究與合作**：需要跨學科的合作，持續進行研究以驗證 AI 模型的有效性和安全性 [6]。
+*   **倫理準則的建立**：制定明確的倫理準則，以指導 AI 技術的負責任開發和應用 [7]。
+*   **生成式 AI 的探索**：利用生成式 AI 創建高質量的合成醫療數據，以彌補真實世界數據的不足，並用於訓練和驗證 AI 模型 [1]。
+
+總而言之，自 2023 年以來，AI 在醫療診斷領域的進步是顯著且迅速的。儘管前方仍有諸多挑戰，但透過技術創新、法規完善和跨界合作，AI 有望為全球醫療保健系統帶來革命性的變革。
+
+### 來源
+
+[1] Advancements in Artificial Intelligence for Medical ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC11202700/
+[2] Efficacy of artificial intelligence-based FFR technology for coronary ... : https://pmc.ncbi.nlm.nih.gov/articles/PMC12350311/
+[3] Artificial Intelligence in Oncology: Current Landscape, Challenges ... : https://aacrjournals.org/cancerdiscovery/article/14/5/711/745040/Artificial-Intelligence-in-Oncology-Current
+[4] Evaluating Deep Learning Models for Breast Cancer Classification : https://arxiv.org/html/2408.16859v2
+[5] Predicting disease onset from electronic health records for ... : https://www.frontiersin.org/journals/artificial-intelligence/articles/10.3389/frai.2023.1287541/full
+[6] The Impact of Artificial Intelligence on Healthcare: A Comprehensive ...: https://pmc.ncbi.nlm.nih.gov/articles/PMC11702416/
+[7] AI in diagnostic imaging: Revolutionising accuracy and efficiency: https://www.sciencedirect.com/science/article/pii/S2666990024000132
+[8] Challenges of AI Integration in Healthcare - Ominext: https://www.ominext.com/en/blog/challenges-of-ai-integration-in-healthcare

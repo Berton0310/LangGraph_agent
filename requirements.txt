@@ -1,4 +1,29 @@
-langchain_google_genai==2.1.12
-langgraph==0.6.8
-#  pipreqs . --force --ignore .venv --encoding=utf-8 --savepath requirements.txt  執行此指令會自動產生 requirements.txt
+# Core dependencies
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-google-genai>=0.1.0
+langchain-openai>=0.1.0
+langchain-anthropic>=0.1.0
+langgraph>=0.2.0
+pydantic>=2.7.0
 python-dotenv>=1.0.1
+
+# Web search and API dependencies
+tavily-python>=0.3.0
+aiohttp>=3.8.0
+httpx>=0.25.0
+
+# MCP dependencies
+langchain-mcp-adapters>=0.1.0
+mcp>=1.0.0
+
+# FastAPI dependencies
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# Development dependencies
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+ruff>=0.5.0
+black>=24.3.0
+mypy>=1.8.0
