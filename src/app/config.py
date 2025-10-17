@@ -147,7 +147,7 @@ class Configuration(BaseModel):
         }
     )
     max_react_tool_calls: int = Field(
-        default=10,
+        default=2,
         metadata={
             "x_oap_ui_config": {
                 "type": "slider",
@@ -161,11 +161,11 @@ class Configuration(BaseModel):
     )
     # Model Configuration
     summarization_model: str = Field(
-        default="gemini-2.5-pro",  # 原始: "openai:gpt-4o-mini"
+        default="openai:gpt-4o-mini",  # 原始: "openai:gpt-4o-mini"
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "gemini-2.5-pro",  # 原始: "openai:gpt-4o-mini"
+                "default": "openai:gpt-4o-mini",  # 原始: "openai:gpt-4o-mini"
                 "description": "Model for summarizing research results from Tavily search results"
             }
         }
@@ -410,7 +410,7 @@ class ConfigurationManager:
             ),
             AgentType.WRITER: AgentConfiguration(
                 agent_type=AgentType.WRITER,
-                model_name="gemini-2.5-pro",  # 原始: "gpt-4o"
+                model_name="gpt-4o",  # 原始: "gpt-4o"
                 temperature=0.3,
                 custom_prompt="你是一個專業的報告撰寫專家"
             ),

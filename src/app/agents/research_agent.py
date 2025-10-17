@@ -3,6 +3,7 @@
 import asyncio
 from typing import Literal
 import time
+from datetime import datetime
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import (
@@ -54,19 +55,39 @@ from ..utils.utils import (
 )
 
 # 初始化一個可在整個代理中使用的可配置模型
-
-
-# 初始化一個可在整個代理中使用的可配置模型
 configurable_model = init_chat_model(
     configurable_fields=("model", "max_tokens"),
 )
+
+
+def print_progress(message: str, level: int = 0):
+    """打印進度訊息"""
+    # timestamp = datetime.now().strftime("%H:%M:%S")
+    indent = "  " * level
+    formatted_message = f" {indent}{message}"
+    print(formatted_message)
+
+    # 如果存在全域進度回調函數，則調用它
+    if hasattr(print_progress, 'progress_callback') and print_progress.progress_callback:
+        try:
+            print_progress.progress_callback(formatted_message)
+        except Exception:
+            pass  # 忽略回調錯誤，避免影響主要流程
 
 
 def _append_timing(state: dict, label: str, start_time: float) -> list[str]:
     """將單步耗時（秒）附加到狀態中的 timings 並回傳最新列表。"""
     elapsed = time.perf_counter() - start_time
     timings = state.get("timings", []) or []
-    timings = [*timings, f"{label}: {elapsed:.2f}s"]
+
+    # 為 supervisor 相關步驟添加迭代次數
+    if label in ["supervisor", "supervisor_tools"]:
+        iteration = state.get("research_iterations", 0)
+        unique_label = f"{label}#{iteration}"
+    else:
+        unique_label = label
+
+    timings = [*timings, f"{unique_label}: {elapsed:.2f}s"]
     return timings
 
 
@@ -83,14 +104,22 @@ async def clarify_with_user(state: AgentState, config: RunnableConfig) -> Comman
     Returns:
         以釐清問題結束或進行研究簡報的命令
     """
+    # 標準化階段事件：使用者釐清階段
+    print_progress("STAGE::clarify_with_user::enter")
+    # print_progress("🔍 正在分析研究需求...")
+
     # 步驟 1：檢查配置中是否啟用釐清
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
+    # print_progress("✓ 已載入配置設定", 1)
+
     if not configurable.allow_clarification:
         # 跳過釐清步驟，直接進行研究
+        # print_progress("✓ 釐清功能已禁用，跳過釐清步驟", 1)
         return Command(goto="write_research_brief")
 
     # 步驟 2：為結構化釐清分析準備模型
+    # print_progress("✓ 正在準備釐清分析模型...", 1)
     messages = state["messages"]
     model_config = {
         "model": configurable.research_model,
@@ -107,6 +136,7 @@ async def clarify_with_user(state: AgentState, config: RunnableConfig) -> Comman
     )
 
     # 步驟 3：分析是否需要釐清
+    # print_progress("✓ 正在分析使用者需求是否明確...", 1)
     prompt_content = clarify_with_user_instructions.format(
         messages=get_buffer_string(messages),
         date=get_today_str()
@@ -116,6 +146,7 @@ async def clarify_with_user(state: AgentState, config: RunnableConfig) -> Comman
     # 步驟 4：根據釐清分析進行路由
     if response.need_clarification:
         # 以釐清問題結束給使用者
+        # print_progress("✓ 需要釐清問題，等待使用者回應", 1)
         return Command(
             goto=END,
             update={
@@ -125,6 +156,7 @@ async def clarify_with_user(state: AgentState, config: RunnableConfig) -> Comman
         )
     else:
         # 以驗證訊息進行研究
+        # print_progress("✓ 需求明確，準備進行研究", 1)
         return Command(
             goto="write_research_brief",
             update={
@@ -147,9 +179,15 @@ async def write_research_brief(state: AgentState, config: RunnableConfig) -> Com
     Returns:
         進行研究監督者的命令，帶有初始化的上下文
     """
+    # 標準化階段事件：研究規劃階段
+    print_progress("STAGE::write_research_brief::enter")
+    # print_progress("📋 正在制定研究計畫...")
+
     # 步驟 1：為結構化輸出設置研究模型
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
+    # print_progress("✓ 已載入研究配置", 1)
+
     research_model_config = {
         "model": configurable.research_model,
         "max_tokens": configurable.research_model_max_tokens,
@@ -157,6 +195,7 @@ async def write_research_brief(state: AgentState, config: RunnableConfig) -> Com
     }
 
     # 為結構化研究問題生成配置模型
+    # print_progress("✓ 正在配置研究問題分析模型...", 1)
     research_model = (
         configurable_model
         .with_structured_output(ResearchQuestion)
@@ -165,18 +204,24 @@ async def write_research_brief(state: AgentState, config: RunnableConfig) -> Com
     )
 
     # 步驟 2：從使用者訊息生成結構化研究簡報
+    # print_progress("✓ 正在分析使用者訊息並生成研究簡報...", 1)
     prompt_content = transform_messages_into_research_topic_prompt.format(
         messages=get_buffer_string(state.get("messages", [])),
         date=get_today_str()
     )
     response = await research_model.ainvoke([HumanMessage(content=prompt_content)])
+    # print_progress("✓ 研究方向與架構已生成", 1)
+    # 將研究簡報內容即時推送給前端
+    # print_progress(f"BRIEF::{response.research_brief}")
 
     # 步驟 3：使用研究簡報和指示初始化監督者
+    # print_progress("✓ 正在初始化研究監督者...", 1)
     supervisor_system_prompt = lead_researcher_prompt.format(
         date=get_today_str(),
         max_concurrent_research_units=configurable.max_concurrent_research_units,
         max_researcher_iterations=configurable.max_researcher_iterations
     )
+    # print_progress("✓ 監督者已準備就緒", 1)
 
     return Command(
         goto="research_supervisor",
@@ -208,9 +253,17 @@ async def supervisor(state: SupervisorState, config: RunnableConfig) -> Command[
     Returns:
         進行 supervisor_tools 進行工具執行的命令
     """
+    # 標準化階段事件：研究執行（監督者）階段，含迭代次數
+    current_iteration = state.get("research_iterations", 0) + 1
+    print_progress(
+        f"STAGE::research_supervisor::enter::iteration={current_iteration}")
+    # print_progress("🎯 正在規劃研究策略...")
+
     # 步驟 1：使用可用工具配置監督者模型
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
+    # print_progress("✓ 已載入監督者配置", 1)
+
     research_model_config = {
         "model": configurable.research_model,
         "max_tokens": configurable.research_model_max_tokens,
@@ -218,9 +271,11 @@ async def supervisor(state: SupervisorState, config: RunnableConfig) -> Command[
     }
 
     # 可用工具：研究委派、完成信號和戰略思考
+    # print_progress("✓ 正在配置可用工具：研究委派、完成信號、深度思考", 1)
     lead_researcher_tools = [ConductResearch, ResearchComplete, think_tool]
 
     # 配置具有工具、重試邏輯和模型設定的模型
+    # print_progress("✓ 正在綁定工具並設置重試邏輯...", 1)
     research_model = (
         configurable_model
         .bind_tools(lead_researcher_tools)
@@ -229,8 +284,10 @@ async def supervisor(state: SupervisorState, config: RunnableConfig) -> Command[
     )
 
     # 步驟 2：基於當前上下文生成監督者回應
+    # print_progress("✓ 正在分析研究簡報並制定策略...", 1)
     supervisor_messages = state.get("supervisor_messages", [])
     response = await research_model.ainvoke(supervisor_messages)
+    # print_progress("✓ 研究策略已制定", 1)
 
     # 步驟 3：更新狀態並進行工具執行
     return Command(
@@ -309,6 +366,7 @@ async def supervisor_tools(state: SupervisorState, config: RunnableConfig) -> Co
     ]
 
     if conduct_research_calls:
+        # print_progress(f"✓ 正在委派 {len(conduct_research_calls)} 個研究任務...", 1)
         try:
             # 限制並行研究單位以防止資源耗盡
             allowed_conduct_research_calls = conduct_research_calls[
@@ -405,20 +463,27 @@ async def researcher(state: ResearcherState, config: RunnableConfig) -> Command[
     Returns:
         進行 researcher_tools 進行工具執行的命令
     """
+    # print_progress("🔍 正在收集研究資料...")
+
     # 步驟 1：載入配置並驗證工具可用性
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
     researcher_messages = state.get("researcher_messages", [])
+    # print_progress("✓ 已載入研究者配置", 1)
 
     # 獲取所有可用的研究工具（搜尋、MCP、think_tool）
+    # print_progress("✓ 正在載入研究工具...", 1)
     tools = await get_all_tools(config)
     if len(tools) == 0:
+        # print_progress("✗ 未找到可用的研究工具", 1)
         raise ValueError(
             "No tools found to conduct research: Please configure either your "
             "search API or add MCP tools to your configuration."
         )
+    # print_progress(f"✓ 已載入 {len(tools)} 個研究工具", 1)
 
     # 步驟 2：使用工具配置研究者模型
+    # print_progress("✓ 正在配置研究者模型...", 1)
     research_model_config = {
         "model": configurable.research_model,
         "max_tokens": configurable.research_model_max_tokens,
@@ -431,12 +496,14 @@ async def researcher(state: ResearcherState, config: RunnableConfig) -> Command[
     }
 
     # 準備系統提示，如果可用則包含 MCP 上下文
+    # print_progress("✓ 正在準備研究系統提示...", 1)
     researcher_prompt = research_system_prompt.format(
         mcp_prompt=configurable.mcp_prompt or "",
         date=get_today_str()
     )
 
     # 配置具有工具、重試邏輯和設定的模型
+    # print_progress("✓ 正在綁定工具並設置重試邏輯...", 1)
     research_model = (
         configurable_model
         .bind_tools(tools)
@@ -445,8 +512,10 @@ async def researcher(state: ResearcherState, config: RunnableConfig) -> Command[
     )
 
     # 步驟 3：使用系統上下文生成研究者回應
+    # print_progress("✓ 正在分析研究主題並制定搜尋策略...", 1)
     messages = [SystemMessage(content=researcher_prompt)] + researcher_messages
     response = await research_model.ainvoke(messages)
+    # print_progress("✓ 研究策略已制定，準備執行工具", 1)
 
     # 步驟 4：更新狀態並進行工具執行
     return Command(
@@ -568,9 +637,14 @@ async def compress_research(state: ResearcherState, config: RunnableConfig):
     Returns:
         包含壓縮研究摘要和原始筆記的字典
     """
+    # print_progress("📊 正在整理研究結果...")
+
     # 步驟 1：配置壓縮模型
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
+    # print_progress("✓ 已載入壓縮配置", 1)
+
+    # print_progress("✓ 正在配置壓縮模型...", 1)
     synthesizer_model = configurable_model.with_config({
         "model": configurable.compression_model,
         "max_tokens": configurable.compression_model_max_tokens,
@@ -578,6 +652,7 @@ async def compress_research(state: ResearcherState, config: RunnableConfig):
     })
 
     # 步驟 2：為壓縮準備訊息
+    # print_progress("✓ 正在準備研究資料進行壓縮...", 1)
     researcher_messages = state.get("researcher_messages", [])
 
     # 添加從研究模式切換到壓縮模式的指示
@@ -585,6 +660,7 @@ async def compress_research(state: ResearcherState, config: RunnableConfig):
         content=compress_research_simple_human_message))
 
     # 步驟 3：嘗試壓縮，對 token 限制問題使用重試邏輯
+    # print_progress("✓ 正在執行研究資料壓縮...", 1)
     synthesis_attempts = 0
     max_attempts = 3
 
@@ -670,14 +746,22 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
     Returns:
         包含最終報告和清除狀態的字典
     """
+    # 標準化階段事件：報告生成階段
+    print_progress("STAGE::final_report_generation::enter")
+    # print_progress("📄 正在撰寫最終報告...")
+
     # 步驟 1：提取研究發現並準備狀態清理
     notes = state.get("notes", [])
     cleared_state = {"notes": {"type": "override", "value": []}}
     findings = "\n".join(notes)
 
+    # print_progress(f"✓ 正在整合 {len(notes)} 項研究發現...", 1)
+
     # 步驟 2：配置最終報告生成模型
     _start_t = time.perf_counter()
     configurable = Configuration.from_runnable_config(config)
+    # print_progress("✓ 已載入報告生成配置", 1)
+
     writer_model_config = {
         "model": configurable.final_report_model,
         "max_tokens": configurable.final_report_model_max_tokens,
@@ -685,6 +769,7 @@ async def final_report_generation(state: AgentState, config: RunnableConfig):
     }
 
     # 步驟 3：使用 token 限制重試邏輯嘗試報告生成
+    # print_progress("✓ 正在配置報告生成模型...", 1)
     max_retries = 3
     current_retry = 0
     findings_token_limit = None

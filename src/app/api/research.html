@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>研究助手</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%232563eb'/%3E%3Ctext x='32' y='38' font-size='28' text-anchor='middle' fill='white'%3ER%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans,
+          Arial;
+        margin: 24px;
+      }
+      .row {
+        margin-bottom: 12px;
+      }
+      .log {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        background: #fafafa;
+        height: 50vh;
+        overflow: auto;
+      }
+      .tool {
+        color: #0a7;
+      }
+      .stage {
+        color: #2563eb;
+      }
+      .error {
+        color: #b91c1c;
+      }
+      textarea {
+        width: 100%;
+        height: 100px;
+      }
+      button {
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+      pre {
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>研究助手</h1>
+    <div class="row">
+      <label>研究問題：</label>
+      <textarea id="question" placeholder="請輸入研究問題..."></textarea>
+    </div>
+    <div class="row">
+      <button id="startBtn">開始研究</button>
+    </div>
+    <div class="row">
+      <div class="log" id="log"></div>
+    </div>
+    <div class="row">
+      <h2>最終報告</h2>
+      <pre id="report"></pre>
+    </div>
+
+    <script>
+      const log = document.getElementById("log");
+      const report = document.getElementById("report");
+      const startBtn = document.getElementById("startBtn");
+      const questionEl = document.getElementById("question");
+
+      let es = null;
+
+      function appendLog(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      startBtn.addEventListener("click", () => {
+        const q = (questionEl.value || "").trim();
+        if (!q) {
+          alert("請輸入研究問題");
+          return;
+        }
+        if (es) {
+          es.close();
+        }
+        report.textContent = "";
+        log.textContent = "";
+        startBtn.disabled = true;
+        startBtn.textContent = "研究中...";
+
+        const url = `/research/stream?question=${encodeURIComponent(q)}`;
+        es = new EventSource(url);
+
+        es.onopen = () => {
+          appendLog('<span class="stage">[連線建立]</span> 已連線到 SSE');
+        };
+
+        es.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === "stage_start") {
+              appendLog(`<span class="stage">[開始]</span> ${data.stage}`);
+            } else if (data.type === "stage_complete") {
+              appendLog(`<span class="stage">[完成]</span> ${data.stage}`);
+              if (data.stage === "deep_researcher") {
+                // 流程結束
+                startBtn.disabled = false;
+                startBtn.textContent = "開始研究";
+                es && es.close();
+                es = null;
+              }
+            } else if (data.type === "progress") {
+              appendLog(`<span class="stage">[進度]</span> ${data.message}`);
+            } else if (data.type === "final_report") {
+              report.textContent = data.report;
+            } else if (data.type === "error") {
+              appendLog(`<span class="error">[錯誤]</span> ${data.message}`);
+            } else {
+              appendLog(`[事件] ${event.data}`);
+            }
+          } catch (e) {
+            appendLog(`<span class="error">[解析失敗]</span> ${event.data}`);
+          }
+        };
+
+        es.onerror = () => {
+          appendLog('<span class="error">串流連線錯誤或已中斷</span>');
+          startBtn.disabled = false;
+          startBtn.textContent = "開始研究";
+          if (es) {
+            es.close();
+            es = null;
+          }
+        };
+      });
+    </script>
+  </body>
+</html>
