@@ -80,7 +80,7 @@ class Configuration(BaseModel):
 
     # General Configuration
     max_structured_output_retries: int = Field(
-        default=3,
+        default=1,  # 預設1
         metadata={
             "x_oap_ui_config": {
                 "type": "number",
@@ -102,7 +102,7 @@ class Configuration(BaseModel):
         }
     )
     max_concurrent_research_units: int = Field(
-        default=5,
+        default=1,  # 預設5
         metadata={
             "x_oap_ui_config": {
                 "type": "slider",
@@ -134,7 +134,7 @@ class Configuration(BaseModel):
         }
     )
     max_researcher_iterations: int = Field(
-        default=6,
+        default=2,  # 預設6
         metadata={
             "x_oap_ui_config": {
                 "type": "slider",
@@ -147,7 +147,7 @@ class Configuration(BaseModel):
         }
     )
     max_react_tool_calls: int = Field(
-        default=2,
+        default=2,  # 預設10
         metadata={
             "x_oap_ui_config": {
                 "type": "slider",

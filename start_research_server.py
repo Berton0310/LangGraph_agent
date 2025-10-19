@@ -16,14 +16,26 @@ from bson.objectid import ObjectId  # 保留原結構，用於未來擴充（目
 from pymongo import MongoClient  # 保留原結構，用於未來擴充（目前未啟用）
 from pydantic import BaseModel
 from fastapi.responses import FileResponse, StreamingResponse
+from fastapi import UploadFile, File, HTTPException
+from starlette.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 import sys
 import os
 import logging
+import re
+import json
+import shutil
 from pathlib import Path
 import traceback
+from dotenv import load_dotenv
+import base64
+from google import genai
+load_dotenv()
 
+gen_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 # 確保可匯入 src.*（供研究代理與設定使用）
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 if PROJECT_ROOT not in sys.path:
@@ -33,6 +45,19 @@ if PROJECT_ROOT not in sys.path:
 
 # ===== 應用與 CORS 設定 =====
 app = FastAPI()
+
+# 設定編碼
+if sys.platform == "win32":
+    # Windows 系統設定
+    import locale
+    try:
+        locale.setlocale(locale.LC_ALL, 'zh_TW.UTF-8')
+    except:
+        try:
+            locale.setlocale(locale.LC_ALL, 'Chinese_Taiwan.950')
+        except:
+            pass
+
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -44,10 +69,53 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# （保留，未啟用）MongoDB 連線佔位
-# client = MongoClient("mongodb+srv://<user>:<pass>@<cluster>/<db>?...")
-# db = client.test
-# collection = db.umodoc_test
+# 全域驗證錯誤處理器
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    logger.error(f"請求驗證失敗: {exc.errors()}")
+    logger.error(f"請求體: {await request.body()}")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "detail": "請求資料格式錯誤",
+            "errors": exc.errors(),
+            "body": (await request.body()).decode('utf-8') if request.method == "POST" else None
+        }
+    )
+
+# ===== 上傳與靜態檔案設定 =====
+# 直接指定既有的 tmp 目錄（不自動建立）
+TMP_DIR = r"C:\Users\berto\Desktop\capstone project\tmp"
+TMP_IMAGE_DIR = r"C:\Users\berto\Desktop\capstone project\tmp\images_table"
+TMP_OUTPUT_DIR = r"C:\Users\berto\Desktop\capstone project\tmp\tmp_doc"
+MAX_UPLOAD_BYTES = 25 * 1024 * 1024  # 25MB 上限
+DOC_ID_DIR = r'C:\Users\berto\Desktop\capstone project\tmp\document_file'
+
+# ===== MongoDB 連線設定 =====
+client = MongoClient(
+    "mongodb+srv://root:root123@cluster0.pbz1j.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    serverSelectionTimeoutMS=5000,  # 5秒內選擇伺服器
+    connectTimeoutMS=10000,         # 10秒連線超時
+    socketTimeoutMS=20000,          # 20秒 socket 超時
+    maxPoolSize=10,                 # 最大連線池大小
+    minPoolSize=1,                  # 最小連線池大小
+    maxIdleTimeMS=30000,           # 30秒閒置超時
+    retryWrites=True,              # 重試寫入
+    retryReads=True                # 重試讀取
+)
+db = client.test  # database
+collection = db.umodoc_main
+
+# 測試 MongoDB 連線
+try:
+    # 測試連線
+    client.admin.command('ping')
+    logger.info("✅ MongoDB 連線成功")
+except Exception as e:
+    logger.error(f"❌ MongoDB 連線失敗: {e}")
+    # 不中斷服務，但記錄錯誤
 
 # ===== SSE 工具 =====
 
@@ -167,6 +235,44 @@ class AssistantResponse(BaseModel):
     success: bool
     message: str
     content: str = ""
+    error: str = ""
+
+
+# ===== 文檔儲存資料模型 =====
+class DocumentContent(BaseModel):
+    html: str
+    json: dict
+    text: str
+
+
+class PageSize(BaseModel):
+    label: str
+    width: float
+    height: float
+    default: bool
+
+
+class Page(BaseModel):
+    size: PageSize
+    # 加上其他欄位也可以，如 zoomLevel, margin 等（依需求）
+
+
+class DocumentData(BaseModel):
+    content: DocumentContent
+    page: Page
+    document: dict
+
+
+class DocumentSaveRequest(BaseModel):
+    documentId: str
+    reportTitle: str = ""  # 設為可選，提供預設值
+    data: DocumentData  # 使用新的結構化資料格式
+
+
+class DocumentSaveResponse(BaseModel):
+    success: bool
+    message: str
+    document_id: str = ""
     error: str = ""
 
 
@@ -308,6 +414,9 @@ async def run_research(request: dict):
         configurable["allow_clarification"] = False
         run_config = {"configurable": configurable}
 
+        # 生成 task_id（與串流端點一致）
+        task_id = f"research_{int(time.time() * 1000)}_{question[:20]}"
+
         start_dt = datetime.now().isoformat(timespec="seconds")
         start_time = time.perf_counter()
         result = await deep_researcher.ainvoke(
@@ -327,6 +436,7 @@ async def run_research(request: dict):
             "success": True,
             "final_report": result.get("final_report", "研究完成但未生成報告"),
             "timings": result.get("timings", []),
+            "document_id": task_id,  # 新增文檔 ID
         }
 
     except Exception:
@@ -337,6 +447,8 @@ async def run_research(request: dict):
 
 # ===== 全域任務管理 =====
 active_tasks: dict[str, asyncio.Task] = {}
+# SSE 連接管理（用於檔案處理進度推送）
+sse_connections: set[asyncio.Queue] = set()
 
 
 def cancel_task(task_id: str):
@@ -352,6 +464,19 @@ def register_task(task_id: str, task: asyncio.Task):
     """註冊任務到全域管理"""
     active_tasks[task_id] = task
 
+
+def broadcast_sse_event(event: dict):
+    """廣播 SSE 事件到所有連接"""
+    for queue in list(sse_connections):
+        try:
+            # 將字典轉為 JSON 字串，與 print_progress 格式一致
+            import json
+            event_str = json.dumps(event, ensure_ascii=False)
+            queue.put_nowait(event_str)
+        except Exception:
+            # 移除無效連接
+            sse_connections.discard(queue)
+
 # ===== 研究進度 SSE 串流（即時 print_progress） =====
 
 
@@ -361,10 +486,12 @@ async def research_stream(
     question: str = Query(..., description="研究問題"),
 ):
     async def event_generator():
-        yield sse_event({"type": "stage_start", "stage": "deep_researcher", "message": "開始研究"})
 
         # 以 asyncio.Queue 收集 print_progress 的即時訊息
         progress_queue: asyncio.Queue[str] = asyncio.Queue()
+
+        # 註冊此連接到全域 SSE 管理
+        sse_connections.add(progress_queue)
 
         # 綁定回調（不暴露內部資訊）
         try:
@@ -409,6 +536,17 @@ async def research_stream(
         task_id = f"research_{int(time.time() * 1000)}_{question[:20]}"
         register_task(task_id, task)
 
+        # 首次事件：帶 task_id 的階段起始事件
+        try:
+            yield sse_event({
+                "type": "stage_start",
+                "stage": "deep_researcher",
+                "message": "開始研究",
+                "task_id": task_id,
+            })
+        except Exception:
+            pass
+
         try:
             # 迴圈推送進度，直到任務完成或客戶端中斷
             while not task.done():
@@ -419,6 +557,7 @@ async def research_stream(
                     break
                 try:
                     msg = await asyncio.wait_for(progress_queue.get(), timeout=0.25)
+
                     # 解析並轉發標準化階段事件
                     if "STAGE::" in msg:
                         try:
@@ -473,7 +612,12 @@ async def research_stream(
                     if final_report:
                         # 更新暫存文件內容供 /load-document 使用
                         _update_document_content(final_report)
-                        yield sse_event({"type": "final_report", "report": final_report})
+                        # 推送最終報告，包含 task_id 作為文檔 ID
+                        yield sse_event({
+                            "type": "final_report",
+                            "report": final_report,
+                            "document_id": task_id  # 使用 task_id 作為文檔 ID
+                        })
                 else:
                     yield sse_event({"type": "error", "message": "研究執行失敗，請稍後重試"})
 
@@ -486,6 +630,8 @@ async def research_stream(
             # 清理任務註冊
             if task_id in active_tasks:
                 del active_tasks[task_id]
+            # 清理 SSE 連接註冊
+            sse_connections.discard(progress_queue)
             # 統一收尾訊號（若是客戶端取消，這段可能不會被收到）
             try:
                 yield sse_event({"type": "stage_complete", "stage": "deep_researcher"})
@@ -501,17 +647,28 @@ async def research_stream(
 async def cancel_research(request: dict):
     """取消當前正在執行的研究任務"""
     try:
+        task_id_param = request.get("task_id")
         question = request.get("question", "")
-        if not question:
-            return {"error": "請提供研究問題"}
 
-        # 尋找匹配的任務並取消
         canceled_tasks = []
-        for task_id, task in list(active_tasks.items()):
-            if question in task_id and not task.done():
+
+        # 優先使用 task_id 精準取消
+        if task_id_param:
+            task = active_tasks.get(task_id_param)
+            if task and not task.done():
                 task.cancel()
-                canceled_tasks.append(task_id)
-                del active_tasks[task_id]
+                canceled_tasks.append(task_id_param)
+                del active_tasks[task_id_param]
+        else:
+            # 回退：使用 question 前 20 字元作為鍵匹配既有 task_id 模式 research_{ts}_{question[:20]}
+            if not question:
+                return {"error": "請提供 task_id 或 question"}
+            short = question[:20]
+            for tid, task in list(active_tasks.items()):
+                if short and tid.endswith(short) and not task.done():
+                    task.cancel()
+                    canceled_tasks.append(tid)
+                    del active_tasks[tid]
 
         if canceled_tasks:
             logger.info(f"已取消 {len(canceled_tasks)} 個研究任務: {canceled_tasks}")
@@ -539,6 +696,708 @@ async def load_document():
         "content": DOCUMENT_STORE.get("content", "<p>尚未有內容</p>"),
         "characterLimit": DOCUMENT_STORE.get("characterLimit", 100000)
     }
+
+
+# ===== 靜態檔案服務 API =====
+@app.get("/uploads/{file_path:path}")
+async def serve_uploaded_file(file_path: str):
+    """提供上傳檔案的靜態服務，處理 URL 編碼問題"""
+    try:
+        logger.info(f"=== 收到靜態檔案請求 ===")
+        logger.info(f"原始路徑: {file_path}")
+        logger.info(f"請求時間: {datetime.now().isoformat()}")
+
+        # URL 解碼檔案路徑
+        import urllib.parse
+        decoded_path = urllib.parse.unquote(file_path)
+        logger.info(f"解碼後路徑: {decoded_path}")
+
+        # 構建完整檔案路徑
+        full_path = os.path.join(TMP_DIR, decoded_path)
+        logger.info(f"完整檔案路徑: {full_path}")
+
+        # 檢查檔案是否存在
+        if not os.path.exists(full_path):
+            logger.warning(f"檔案不存在: {full_path}")
+            raise HTTPException(status_code=404, detail="檔案不存在")
+
+        # 檢查是否為檔案（不是目錄）
+        if not os.path.isfile(full_path):
+            logger.warning(f"路徑不是檔案: {full_path}")
+            raise HTTPException(status_code=404, detail="檔案不存在")
+
+        logger.info(f"檔案存在，準備返回: {full_path}")
+        # 返回檔案
+        return FileResponse(full_path)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"提供靜態檔案失敗: {file_path}")
+        raise HTTPException(status_code=500, detail="檔案服務失敗")
+
+
+# ===== 檔案上傳 API =====
+@app.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    document_id: str = Query(default="", description="文檔 ID，用於關聯檔案")
+):
+    try:
+        logger.info(f"收到上傳請求: {file.filename}, document_id: {document_id}")
+
+        # 處理檔名編碼問題
+        original_name = file.filename or "unnamed"
+
+        # 多層次解碼處理特殊字符和中文
+        try:
+            import urllib.parse
+
+            # 第一層：URL 解碼
+            decoded_name = urllib.parse.unquote(original_name)
+            logger.info(f"原始檔名: {original_name}")
+            logger.info(f"URL解碼後: {decoded_name}")
+
+            # 第二層：處理可能的雙重編碼
+            if '%' in decoded_name:
+                decoded_name = urllib.parse.unquote(decoded_name)
+                logger.info(f"二次解碼後: {decoded_name}")
+
+            # 第三層：處理特殊字符編碼
+            try:
+                # 嘗試檢測是否為 UTF-8 編碼的 bytes
+                if isinstance(decoded_name, str):
+                    # 檢查是否包含編碼錯誤的字符
+                    if '\\x' in decoded_name or '\\u' in decoded_name:
+                        # 處理轉義字符
+                        decoded_name = decoded_name.encode().decode('unicode_escape')
+                        logger.info(f"轉義字符處理後: {decoded_name}")
+            except Exception:
+                pass
+
+            safe_name = decoded_name
+            logger.info(f"最終檔名: {safe_name}")
+
+        except Exception as e:
+            logger.warning(f"檔名解碼失敗: {e}, 使用原始檔名")
+            safe_name = original_name
+
+        # 檔名安全處理：確保檔名安全且可讀
+        try:
+            # 移除或替換危險字符，但保留中文和常用符號
+            import re
+            # 保留中文字符、英數字、常用符號，移除路徑分隔符和危險字符
+            safe_name = re.sub(r'[<>:"/\\|?*]', '_', safe_name)
+            # 移除多個連續的底線
+            safe_name = re.sub(r'_+', '_', safe_name)
+            # 移除開頭和結尾的底線和空格
+            safe_name = safe_name.strip('_ ')
+
+            # 確保檔名不為空
+            if not safe_name:
+                safe_name = "unnamed_file"
+                logger.warning("檔名為空，使用預設檔名")
+
+            # 限制檔名長度（保留副檔名）
+            if len(safe_name) > 200:
+                name, ext = os.path.splitext(safe_name)
+                safe_name = name[:200-len(ext)] + ext
+                logger.warning(f"檔名過長，已截斷: {safe_name}")
+
+            logger.info(f"安全處理後檔名: {safe_name}")
+
+        except Exception as e:
+            logger.error(f"檔名安全處理失敗: {e}")
+            safe_name = "unnamed_file"
+
+        # 檔案大小限制：25MB（以累計 bytes 檢查）
+        total_read = 0
+
+        # 所有 PDF 檔案都先存入 TMP_DIR
+        target_path = os.path.join(TMP_DIR, safe_name)
+
+        # 確保目錄存在（依你的要求：tmp 目錄本身不由程式建立，若不存在則報錯）
+        if not os.path.isdir(TMP_DIR):
+            raise HTTPException(status_code=500, detail="暫存目錄不存在，請先建立 tmp 目錄")
+
+        with open(target_path, "wb") as out:
+            while True:
+                chunk = await file.read(1024 * 1024)  # 1MB
+                if not chunk:
+                    break
+                total_read += len(chunk)
+                if total_read > MAX_UPLOAD_BYTES:
+                    # 超出大小限制
+                    raise HTTPException(status_code=413, detail="檔案超過 25MB 上限")
+                out.write(chunk)
+
+        # 建立可供前端直接存取的 URL
+        file_url = f"/uploads/{safe_name}"
+
+        # 檢查是否為 PDF 檔案，若是則立即處理
+        logger.info(
+            f"檔案檢查: {safe_name}, 副檔名檢查: {safe_name.lower().endswith('.pdf')}, document_id: {document_id}")
+        if safe_name.lower().endswith('.pdf'):
+            try:
+                # 直接處理 PDF（所有 PDF 都先存入 TMP_DIR）
+                logger.info(f"開始處理 PDF: {safe_name}")
+                logger.info(f"PDF 檔案路徑: {target_path}")
+                logger.info(f"圖片存放路徑: {TMP_IMAGE_DIR}")
+
+                new_path = re.sub(r"\.pdf$", ".md", safe_name)
+                logger.info(f"預期生成的 MD 檔案: {new_path}")
+
+                # 根據是否有 document_id 決定處理方式
+                if document_id:
+                    # 有 document_id：直接輸出到 document_file/{document_id} 目錄
+                    target_dir = os.path.join(DOC_ID_DIR, document_id)
+                    os.makedirs(target_dir, exist_ok=True)
+                    file_info_path = os.path.join(target_dir, "file_info.json")
+
+                    # 直接調用 file_md.main 輸出到目標目錄
+                    import file_md
+                    file_md.main(target_path, TMP_IMAGE_DIR, target_dir)
+
+                    # 檔案已經在目標目錄，不需要移動
+                    source_md_path = os.path.join(target_dir, new_path)
+                    target_md_path = source_md_path
+                else:
+                    # 沒有 document_id：使用 TMP_OUTPUT_DIR 目錄
+                    target_dir = TMP_OUTPUT_DIR
+                    file_info_path = os.path.join(target_dir, "file_info.json")
+
+                    # 直接調用 file_md.main 輸出到 TMP_OUTPUT_DIR
+                    import file_md
+                    file_md.main(target_path, TMP_IMAGE_DIR, TMP_OUTPUT_DIR)
+
+                    # 檔案已經在 TMP_OUTPUT_DIR 目錄，不需要移動
+                    source_md_path = os.path.join(TMP_OUTPUT_DIR, new_path)
+                    target_md_path = source_md_path
+
+                # 檢查生成的檔案是否存在
+                if os.path.exists(source_md_path):
+                    logger.info(f"MD 檔案已生成: {source_md_path}")
+                else:
+                    logger.error(f"找不到生成的 Markdown 檔案: {source_md_path}")
+                    logger.error(
+                        f"目標目錄內容: {os.listdir(target_dir) if os.path.exists(target_dir) else '目錄不存在'}")
+                    # 即使找不到檔案，也繼續處理，但標記為失敗
+                    target_md_path = source_md_path  # 使用原始路徑作為備用
+
+                # 圖片檔案保留在 TMP_IMAGE_DIR，不需要移動
+                if document_id:
+                    logger.info(f"有 document_id，圖片檔案保留在: {TMP_IMAGE_DIR}")
+                else:
+                    logger.info(f"沒有 document_id，圖片檔案保留在: {TMP_IMAGE_DIR}")
+                with open(target_md_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                content = content[:500]
+                prompt_file = '''以下是一份由 PDF 轉換而來的 Markdown 文件內容。
+                請根據內容產生以下項目：
+                1 【摘要】：以 3–5 句話簡述文件主題與核心內容。
+                2 【關鍵詞】：列出 5–10 個能代表此文件內容的關鍵詞。
+                3 【文件類型】：嘗試判斷此文件屬於何種類型（如研究報告、財務文件、合約、簡報、技術手冊等）。
+                請注意：
+                - Markdown 內容可能包含標題（#、##）、表格、條列項目與附註。
+                - 請根據這些結構協助你更準確地理解文件。
+                - 請使用繁體中文回答，並依序以清晰的格式輸出結果，只根據上述的項目格式輸出不要輸出其他內容。
+                請使用繁體中文回答，保持條理清晰。
+                以下是文件內容：
+                '''
+                response = gen_client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=f'{prompt_file}\n{content}',
+                )
+                new_data = {
+                    "file_path": target_md_path,
+                    "file_name": safe_name.replace('.pdf', ''),
+                    "describe": f"附件檔案：{response.text}",
+                    "document_id": document_id
+                }
+                # 如果檔案存在 → 讀取舊資料
+                if os.path.exists(file_info_path):
+                    with open(file_info_path, "r", encoding="utf-8") as f:
+                        try:
+                            data = json.load(f)
+                        except json.JSONDecodeError:
+                            data = []
+                else:
+                    data = []
+
+                # 新增資料
+                data.append(new_data)
+
+                # 寫回檔案
+                with open(file_info_path, "w", encoding="utf-8") as f:
+                    json.dump(data, f, ensure_ascii=False, indent=4)
+
+                print("✅ 新資料已寫入！")
+
+                logger.info(f"PDF 處理完成: {safe_name}")
+
+                return {
+                    "id": safe_name,
+                    "url": file_url,
+                    "name": safe_name,
+                    "processed": True,
+                    "status": "completed",
+                    "document_id": document_id,
+                    "md_file_path": target_md_path
+                }
+            except Exception as e:
+                logger.exception(f"PDF 處理失敗: {safe_name}")
+
+                return {
+                    "id": safe_name,
+                    "url": file_url,
+                    "name": safe_name,
+                    "processed": False,
+                    "status": "failed",
+                    "error": str(e),
+                    "document_id": document_id
+                }
+        else:
+            # 非 PDF 檔案
+            return {
+                "id": safe_name,
+                "url": file_url,
+                "name": safe_name,
+                "processed": False,
+                "status": "skipped",
+                "document_id": document_id
+            }
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("檔案上傳失敗")
+        raise HTTPException(status_code=500, detail="檔案上傳失敗")
+
+
+# ===== Markdown 檔案 API =====
+@app.get("/markdown")
+async def get_markdown(
+    document_id: str = Query(default="", description="文檔 ID"),
+    file_name: str = Query(..., description="檔案名稱")
+):
+    """獲取 Markdown 檔案內容"""
+    try:
+        logger.info(
+            f"收到 Markdown 請求: document_id={document_id}, file_name={file_name}")
+
+        # 將 .pdf 改為 .md
+        md_filename = re.sub(r"\.pdf$", ".md", file_name)
+
+        # 根據是否有 document_id 決定檔案路徑
+        if document_id:
+            # 有 document_id：從 document_file/{document_id} 目錄讀取
+            file_path = os.path.join(DOC_ID_DIR, document_id, md_filename)
+            logger.info(f"有 document_id，檔案路徑: {file_path}")
+        else:
+            # 沒有 document_id：從 tmp_doc 目錄讀取
+            file_path = os.path.join(TMP_OUTPUT_DIR, md_filename)
+            logger.info(f"沒有 document_id，檔案路徑: {file_path}")
+
+        # 檢查檔案是否存在
+        if not os.path.exists(file_path):
+            logger.warning(f"Markdown 檔案不存在: {file_path}")
+            raise HTTPException(status_code=404, detail="Markdown 檔案不存在")
+
+        # 讀取檔案內容
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            # 詳細的編碼檢查和調試
+            logger.info(f"檔案讀取成功: {file_path}")
+            logger.info(f"內容長度: {len(content)}")
+            logger.info(f"內容前100字元: {repr(content[:100])}")
+
+            # 檢查內容是否包含亂碼
+            if content and len(content) > 0:
+                # 檢查是否包含中文字符
+                chinese_chars = sum(
+                    1 for char in content if '\u4e00' <= char <= '\u9fff')
+                logger.info(f"中文字符數量: {chinese_chars}")
+
+                # 檢查是否有亂碼字符
+                garbled_chars = sum(1 for char in content if ord(
+                    char) > 127 and char not in '\n\r\t')
+                logger.info(f"高ASCII字符數量: {garbled_chars}")
+
+                # 嘗試檢測編碼問題
+                try:
+                    # 確保內容可以正確編碼為 UTF-8
+                    encoded_content = content.encode('utf-8')
+                    logger.info(f"UTF-8 編碼成功，編碼後長度: {len(encoded_content)}")
+                except UnicodeEncodeError as e:
+                    logger.error(f"UTF-8 編碼錯誤: {e}")
+                    # 嘗試使用其他編碼讀取
+                    with open(file_path, "r", encoding="big5") as f:
+                        content = f.read()
+                    logger.info(f"使用 Big5 編碼重新讀取成功: {file_path}")
+            else:
+                logger.warning(f"檔案內容為空: {file_path}")
+                content = f"# {file_name}\n\n檔案內容為空或無法讀取。"
+
+        except UnicodeDecodeError as e:
+            logger.error(f"UTF-8 解碼失敗: {e}")
+            # 嘗試使用其他編碼
+            try:
+                with open(file_path, "r", encoding="big5") as f:
+                    content = f.read()
+                logger.info(f"使用 Big5 編碼讀取成功: {file_path}")
+            except Exception as e2:
+                logger.error(f"Big5 編碼也失敗: {e2}")
+                content = f"# {file_name}\n\n檔案編碼無法識別，請檢查檔案格式。"
+        except Exception as e:
+            logger.error(f"讀取檔案失敗: {e}")
+            content = f"# {file_name}\n\n檔案讀取失敗: {str(e)}"
+
+        # 建立回應並設定正確的編碼標頭
+        from fastapi.responses import JSONResponse
+        response = JSONResponse({
+            "content": content,
+            "fileName": file_name
+        })
+        response.headers["Content-Type"] = "application/json; charset=utf-8"
+        return response
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"讀取 Markdown 檔案失敗: {file_path}")
+        raise HTTPException(status_code=500, detail="讀取 Markdown 檔案失敗")
+
+
+# ===== 文檔附件 API =====
+@app.get("/documents/{document_id}/attachments")
+async def get_document_attachments(document_id: str):
+    """獲取文檔的附件列表"""
+    try:
+        logger.info(f"收到附件列表請求: {document_id}")
+
+        # 檢查文檔是否存在
+        document = collection.find_one({"document_id": document_id})
+        if not document:
+            logger.warning(f"文檔不存在: {document_id}")
+            raise HTTPException(status_code=404, detail="文檔不存在")
+
+        # 訪問文檔目錄
+        document_folder = os.path.join(DOC_ID_DIR, document_id)
+        attachments = []
+
+        if os.path.exists(document_folder):
+            # 獲取所有 .md 檔案
+            for filename in os.listdir(document_folder):
+                if filename.endswith('.md'):
+                    file_path = os.path.join(document_folder, filename)
+
+                    # 獲取檔案資訊
+                    file_stat = os.stat(file_path)
+                    file_size = file_stat.st_size
+                    upload_time = datetime.fromtimestamp(
+                        file_stat.st_ctime).isoformat()
+
+                    # 生成對應的 PDF 檔案名稱
+                    pdf_filename = re.sub(r"\.md$", ".pdf", filename)
+
+                    # 生成附件 ID（使用檔案名稱的 hash）
+                    import hashlib
+                    attachment_id = f"att_{hashlib.md5(filename.encode()).hexdigest()[:8]}"
+
+                    attachments.append({
+                        "id": attachment_id,
+                        "fileName": pdf_filename,
+                        "fileSize": file_size,
+                        "uploadTime": upload_time,
+                        "status": "completed",
+                        "convertedUrl": f"http://localhost:8000/uploads/{pdf_filename}"
+                    })
+
+        logger.info(f"附件列表載入成功: {document_id}, 共 {len(attachments)} 個附件")
+
+        return {
+            "attachments": attachments
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"載入附件列表失敗: {document_id}")
+        raise HTTPException(status_code=500, detail="載入附件列表失敗")
+
+
+# ===== 文檔載入 API =====
+@app.get("/documents")
+async def get_documents():
+    """獲取所有文檔列表"""
+    try:
+        logger.info("收到文檔列表請求")
+
+        # 從 MongoDB 獲取所有文檔
+        documents_cursor = collection.find({}, {
+            "document_id": 1,
+            "report_title": 1,
+            "created_at": 1,
+            "updated_at": 1
+        }).sort("updated_at", -1)  # 按更新時間降序排列
+
+        documents = []
+        for doc in documents_cursor:
+            document_id = doc.get("document_id", "")
+
+            # 計算附件數量（只計算 .md 檔案）
+            document_folder = os.path.join(
+                TMP_DIR, "document_file", document_id)
+            attachment_count = 0
+            if os.path.exists(document_folder):
+                attachment_count = len([f for f in os.listdir(document_folder)
+                                        if os.path.isfile(os.path.join(document_folder, f)) and f.endswith('.md')])
+
+            documents.append({
+                "id": document_id,
+                "title": doc.get("report_title", ""),
+                "createdAt": doc.get("created_at", ""),
+                "updatedAt": doc.get("updated_at", ""),
+                "attachmentCount": attachment_count
+            })
+
+        logger.info(f"文檔列表載入成功，共 {len(documents)} 個文檔")
+
+        return {
+            "documents": documents
+        }
+
+    except Exception as e:
+        logger.exception("載入文檔列表失敗")
+        raise HTTPException(status_code=500, detail="載入文檔列表失敗")
+
+
+@app.get("/documents/{document_id}")
+async def get_document(document_id: str):
+    """根據文檔 ID 載入文檔"""
+    try:
+        logger.info(f"收到文檔載入請求: {document_id}")
+
+        # 從 MongoDB 載入文檔
+        document = collection.find_one({"document_id": document_id})
+
+        if not document:
+            logger.warning(f"文檔不存在: {document_id}")
+            raise HTTPException(status_code=404, detail="文檔不存在")
+
+        # 計算附件數量（只計算 .md 檔案）
+        document_folder = os.path.join(TMP_DIR, "document_file", document_id)
+        attachment_count = 0
+        if os.path.exists(document_folder):
+            attachment_count = len([f for f in os.listdir(document_folder)
+                                    if os.path.isfile(os.path.join(document_folder, f)) and f.endswith('.md')])
+
+        logger.info(f"文檔載入成功: {document_id}, 附件數量: {attachment_count}")
+
+        return {
+            "id": document_id,
+            "title": document.get("report_title", ""),
+            "content": document.get("content", {}).get("html", ""),
+            "createdAt": document.get("created_at", ""),
+            "updatedAt": document.get("updated_at", ""),
+            "attachmentCount": attachment_count
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"載入文檔失敗: {document_id}")
+        raise HTTPException(status_code=500, detail="載入文檔失敗")
+
+
+# ===== 文檔儲存 API =====
+@app.post("/test-save-document")
+async def test_save_document(request: dict):
+    """測試文檔儲存請求格式"""
+    try:
+        logger.info(f"收到測試請求: {request}")
+        return {
+            "success": True,
+            "message": "請求格式正確",
+            "received_data": request
+        }
+    except Exception as e:
+        logger.exception("測試請求失敗")
+        return {"error": str(e)}
+
+
+@app.post("/test-new-format")
+async def test_new_format(request: DocumentSaveRequest):
+    """測試新的結構化資料格式"""
+    try:
+        logger.info(f"收到新格式測試請求: {request.documentId}")
+        logger.debug(
+            f"資料結構: content.html長度={len(request.data.content.html)}, page_size={request.data.page.size.label}")
+        return {
+            "success": True,
+            "message": "新格式請求正確",
+            "document_id": request.documentId,
+            "content_length": len(request.data.content.html),
+            "page_size": request.data.page.size.label
+        }
+    except Exception as e:
+        logger.exception("新格式測試失敗")
+        return {"error": str(e)}
+
+
+@app.post("/save-document", response_model=DocumentSaveResponse)
+async def save_document(request: dict):
+    """儲存文檔到 MongoDB"""
+    try:
+        # 從請求中提取資料，支援兩種格式
+        document_id = request.get("documentId", "")
+        report_title = request.get("reportTitle", "")
+
+        # 檢查是否為新格式（有 data 欄位）
+        if "data" in request:
+            data = request["data"]
+            content_html = data["content"]["html"]
+            content_json = data["content"]["json"]
+            content_text = data["content"]["text"]
+            page_info = data["page"]
+            document_data = data["document"]
+        else:
+            # 舊格式（直接包含 content, page, document）
+            content_html = request.get("content", {}).get("html", "")
+            content_json = request.get("content", {}).get("json", {})
+            content_text = request.get("content", {}).get("text", "")
+            page_info = request.get("page", {})
+            document_data = request.get("document", {})
+
+        logger.info(f"收到文檔儲存請求: {document_id}")
+        logger.debug(
+            f"請求資料: documentId={document_id}, reportTitle={report_title}, content_length={len(content_html)}")
+        logger.debug(f"完整請求內容: {request}")
+
+        # 驗證必要欄位
+        if not document_id:
+            return DocumentSaveResponse(
+                success=False,
+                message="缺少必要欄位: documentId",
+                error="documentId is required"
+            )
+
+        if not content_html:
+            return DocumentSaveResponse(
+                success=False,
+                message="缺少必要欄位: content.html",
+                error="content.html is required"
+            )
+
+        # 準備儲存到 MongoDB 的文檔資料
+        mongo_document = {
+            "document_id": document_id,
+            "report_title": report_title,
+            "content": {
+                "html": content_html,
+                "json": content_json,
+                "text": content_text
+            },
+            "page": page_info,
+            "document": document_data,
+            "created_at": datetime.now().isoformat(),
+            "updated_at": datetime.now().isoformat()
+        }
+
+        # 檢查文檔是否已存在
+        existing_doc = collection.find_one({"document_id": document_id})
+
+        if existing_doc:
+            # 更新現有文檔
+            result = collection.update_one(
+                {"document_id": document_id},
+                {
+                    "$set": {
+                        "content": {
+                            "html": content_html,
+                            "json": content_json,
+                            "text": content_text
+                        },
+                        "page": page_info,
+                        "document": document_data,
+                        "updated_at": datetime.now().isoformat()
+                    }
+                }
+            )
+            logger.info(
+                f"文檔已更新: {document_id}, 修改筆數: {result.modified_count}")
+            message = "文檔已更新"
+        else:
+            # 新文檔：移動 tmp_doc 中的檔案到新建資料夾
+            try:
+                # 建立目標資料夾
+                document_folder = os.path.join(
+                    TMP_DIR, "document_file", document_id)
+                os.makedirs(document_folder, exist_ok=True)
+
+                # 移動 tmp_doc 中的所有檔案到目標資料夾
+                tmp_doc_folder = os.path.join(TMP_DIR, "tmp_doc")
+                if os.path.exists(tmp_doc_folder):
+                    for filename in os.listdir(tmp_doc_folder):
+                        src_path = os.path.join(tmp_doc_folder, filename)
+                        dst_path = os.path.join(document_folder, filename)
+
+                        if os.path.isfile(src_path):
+                            # 移動檔案
+                            shutil.move(src_path, dst_path)
+                            logger.info(f"檔案已移動: {filename} -> {dst_path}")
+
+                    # 保留 tmp_doc 資料夾，不刪除
+                    logger.info(f"tmp_doc 資料夾已保留: {tmp_doc_folder}")
+
+                # 圖片資料夾保留在 TMP_IMAGE_DIR，不需要移動
+                logger.info(f"圖片資料夾保留在: {TMP_IMAGE_DIR}")
+
+                # 更新文檔資料，加入檔案路徑資訊
+                document_data["file_folder"] = document_folder
+                document_data["file_count"] = len([f for f in os.listdir(
+                    document_folder) if os.path.isfile(os.path.join(document_folder, f))])
+
+                logger.info(f"新文檔檔案已移動到: {document_folder}")
+
+            except Exception as move_error:
+                logger.exception(f"檔案移動失敗: {move_error}")
+                # 即使檔案移動失敗，仍繼續儲存文檔
+                pass
+
+            # 插入新文檔
+            result = collection.insert_one(mongo_document)
+            logger.info(
+                f"新文檔已建立: {document_id}, 插入ID: {result.inserted_id}")
+            message = "文檔已建立並檔案已移動"
+
+        return DocumentSaveResponse(
+            success=True,
+            message=message,
+            document_id=document_id
+        )
+
+    except Exception as e:
+        logger.exception(f"文檔儲存失敗: {document_id}")
+
+        # 檢查是否為資料驗證問題
+        if "ValidationError" in str(type(e)) or "422" in str(e):
+            error_msg = f"資料格式錯誤: {str(e)}"
+        # 檢查是否為 MongoDB 連線問題
+        elif "ServerSelectionTimeoutError" in str(type(e)) or "AutoReconnect" in str(e):
+            error_msg = "資料庫連線問題，請稍後重試"
+        elif "OperationFailure" in str(type(e)):
+            error_msg = "資料庫操作失敗，請檢查資料格式"
+        else:
+            error_msg = f"文檔儲存失敗: {str(e)}"
+
+        return DocumentSaveResponse(
+            success=False,
+            message=error_msg,
+            error=str(e)
+        )
+
 
 if __name__ == "__main__":
     print("🚀 正在啟動研究服務器...")
